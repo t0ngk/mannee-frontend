@@ -10,13 +10,24 @@ import Friend from "../screens/Friend";
 const tab = createBottomTabNavigator();
 
 export default function MainNavigation() {
-    return (
-
-        <tab.Navigator initialRouteName="Subscriptions" >
-            <tab.Screen name="Subscriptions" component={CreatingSubNavigate} options={{ headerShown: false }} />
-            <tab.Screen name="Bill" component={Bill} />
-            <tab.Screen name="Friend" component={Friend} />
-        </tab.Navigator>
-
-    );
+  return (
+    <tab.Navigator initialRouteName="Subscriptions">
+      <tab.Screen
+        name="Subscriptions"
+        component={CreatingSubNavigate}
+        options={{ headerShown: false }}
+      />
+      <tab.Screen
+        name="Bill"
+        component={Bill}
+        options={({ navigation, props }) => ({
+          headerLeft: () => <Button title="Setting" />,
+          headerRight: () => (
+            <Button title="+" onPress={() => navigation.navigate("BillAdd")} />
+          ),
+        })}
+      />
+      <tab.Screen name="Friend" component={Friend} />
+    </tab.Navigator>
+  );
 }
