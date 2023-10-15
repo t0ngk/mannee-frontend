@@ -1,8 +1,8 @@
 import { View, Image, Text } from "react-native";
 
-export default function Boxsubscription({image, name, price, color}) {
+export default function Boxsubscription({ image, name, price, color, day }) {
     return (
-        <View style={{backgroundColor: color}} className="flex flex-row justify-between items-center border-[0.5px] border-[#CFCFCF] px-4 py-3 w-full my-2 rounded-xl">
+        <View style={{ backgroundColor: color }} className="flex flex-row justify-between items-center border-[0.5px] border-[#CFCFCF] px-4 py-3 w-full my-2 rounded-xl">
             <View className="flex flex-row items-center">
                 <Image className="h-20 w-20 rounded-full" source={{ uri: image }} />
                 <View className="flex flex-col ml-4">
@@ -10,6 +10,9 @@ export default function Boxsubscription({image, name, price, color}) {
                     <Text className="font-light">฿ {price}</Text>
                 </View>
             </View>
+            {day ? <View>
+                <Text className="text-light">{day ? day : 0} DAYS</Text>
+            </View> : <View></View>}
         </View>
     );
 }

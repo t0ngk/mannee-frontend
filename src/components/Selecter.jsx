@@ -1,6 +1,6 @@
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 export default function Selecter({noti}) {
