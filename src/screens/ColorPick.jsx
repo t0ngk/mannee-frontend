@@ -26,7 +26,7 @@ const ColorPick = ({ navigation, route }) => {
         <Button
           title="Confrim"
           color={"#ffff"}
-          onPress={() => navigation.navigate(`${page??''}`, { color: color })}
+          onPress={() => navigation.navigate(page, { color: color })}
         />
       </View>
     </SafeAreaView>
