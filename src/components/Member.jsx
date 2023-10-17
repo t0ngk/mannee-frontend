@@ -4,14 +4,14 @@ import { Image, View, Text, Button, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import MemberStructure from "./MemberStructure";
-export default function Member({ data, stage, type, memberType }) {
+export default function Member({ data, stage, type, memberType, showheader}) {
   const keyExtractor = (item) => item.id.toString();
   const navigation = useNavigation();
   return (
     <View className="h-full">
-      <View className="flex items-center max-h-[280px]">
-        <Text className="text-[17px] font-bold ">Member(s)</Text>
-        <View className="border max-h-[650px] my-5 p-3  rounded-xl border-[#CFCFCF] w-full ">
+      <View className="flex items-center">
+        {showheader === 'show' &&(<Text className="text-[17px] font-bold ">Member(s)</Text>)}
+        <View className="border max-h-[650px] p-3  rounded-xl border-[#CFCFCF] w-full ">
           <View className="items-end">
             {type === "edit" && (
               <Text
