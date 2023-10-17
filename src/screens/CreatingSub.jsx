@@ -39,12 +39,18 @@ export default function CreatingSub({ navigation }) {
         <FlatList
           data={Data}
           renderItem={({ item }) => (
-            <Boxsubscription
-              image={item.img}
-              name={item.name}
-              price={item.price}
-              color={item.color}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("EditSubscription", { name: item.name, price: item.price, img: item.img, color: item.color, firstbill: "", cycle: "", daytopay: "" });
+              }}
+            >
+              <Boxsubscription
+                image={item.img}
+                name={item.name}
+                price={item.price}
+                color={item.color}
+              />
+            </TouchableOpacity>
           )}
         />
       </ScrollView>
@@ -52,8 +58,8 @@ export default function CreatingSub({ navigation }) {
         <Button
           title="Create Custom Subscription"
           color={"#FFFF"}
-          onPress={({}) => {
-            navigation.navigate("NewSubscription");
+          onPress={({ }) => {
+            navigation.navigate("NewSubscription", { page: "NewSubscription", name: "", price: "", img: "", color: "", firstbill: "", cycle: "", daytopay: "" });
           }}
         />
       </View>
