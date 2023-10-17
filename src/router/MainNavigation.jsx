@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { Button } from "react-native";
+import { Alert, Button, TouchableOpacity, View, Text } from "react-native";
 
 import CreatingSubNavigate from "./CreatingSubNavigate";
 import Bill from "../screens/Bill";
-import Friend from "../screens/Friend";
+import Friends from "../screens/Friends";
 
 const tab = createBottomTabNavigator();
 
@@ -18,7 +18,7 @@ export default function MainNavigation() {
         options={{ headerShown: false }}
       />
       <tab.Screen
-        name="Bill"
+        name="Bills"
         component={Bill}
         options={({ navigation, props }) => ({
           headerLeft: () => <Button title="Setting" />,
@@ -27,7 +27,15 @@ export default function MainNavigation() {
           ),
         })}
       />
-      <tab.Screen name="Friend" component={Friend} />
+      <tab.Screen name="Friends" component={Friends} options={({ navigation, props }) => ({
+        headerRight: () => (
+          <TouchableOpacity onPress={()=> Alert.alert('hi')}>
+            <View className="mx-4">
+              <Text className="text-4xl font-light">+</Text>
+            </View>
+          </TouchableOpacity>
+        ),
+      })} />
     </tab.Navigator>
   );
 }
