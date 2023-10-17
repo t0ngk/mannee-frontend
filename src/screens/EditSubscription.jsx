@@ -47,7 +47,7 @@ export default function EditSubscription({ navigation, route }) {
           Subimg={img}
           Subdate={firstbill}
           Subcycle={cycle}
-          navigation={navigation}
+          navigation={'EditSubscription'}
           page={page}
         />
       </View>
