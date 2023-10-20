@@ -38,7 +38,7 @@ export default function EditSubscription({ navigation, route }) {
   const { name, price, img, color, firstbill, cycle, daytopay, page } = route.params;
 
   return (
-    <ScrollView className="overflow-auto w-full h-full">
+    <ScrollView className="overflow-auto w-full h-full max-h-[800px]">
       <View className="m-[20px]">
         <FormEditAddSub
           Subprice={price}
@@ -51,7 +51,7 @@ export default function EditSubscription({ navigation, route }) {
           page={page}
         />
       </View>
-      <View className="mx-[20px]">
+      <View className="mx-[20px] h-[25%]">
         <Member
           data={Data}
           stage="edit"
