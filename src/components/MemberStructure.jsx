@@ -1,4 +1,5 @@
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
+import { Ionicons } from '@expo/vector-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useState } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
@@ -32,6 +33,15 @@ export default function MemberStructure({ id, img, name, type, memberType }) {
             color="red"
             size={20}
           ></FontAwesomeIcon>
+        </TouchableOpacity>
+      )}
+      {memberType === "addfirend" && (
+        <TouchableOpacity
+          className="flex flex-row m-2"
+          onPress={() => alert(`Add this member ${id} `)}
+        >
+          <Ionicons name="ios-person-add-outline"
+          size={24} color="black" />
         </TouchableOpacity>
       )}
       {memberType === "none" && <></>}
