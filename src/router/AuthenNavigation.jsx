@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { TouchableOpacity ,View, Text, Alert, Button } from "react-native";
+import { TouchableOpacity, View, Text, Alert, Button } from "react-native";
 
 import Login from "../screens/Login";
 import Registor from "../screens/Registor";
@@ -15,7 +15,7 @@ import AddMember from "../screens/AddMember";
 import FoodAdd from "../screens/FoodAdd";
 import FoodEdit from "../screens/FoodEdit";
 import EditSubscription from "../screens/EditSubscription";
-
+import AddFriends from "../screens/AddFriends";
 
 const Stack = createStackNavigator();
 
@@ -60,15 +60,17 @@ export default function AuthNavigation() {
               headerShown: true,
               headerTitle: "Edit Subscription",
               headerBackTitle: " ",
-              headerRight: () => {return(
-                <TouchableOpacity onPress={({}) => {
-                  Alert.alert('Edit');
-                }}>
-                  <View className="mx-4">
-                    <Text className="text-lg font-semibold">Edit</Text>
-                  </View>
-                </TouchableOpacity>
-              )},
+              headerRight: () => {
+                return (
+                  <TouchableOpacity onPress={({ }) => {
+                    Alert.alert('Edit');
+                  }}>
+                    <View className="mx-4">
+                      <Text className="text-lg font-semibold">Edit</Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+              },
             }}
           />
           <Stack.Screen
@@ -126,6 +128,15 @@ export default function AuthNavigation() {
               headerTitle: "Edit Food",
               headerBackTitle: " ",
               headerRight: () => <Button title="Save" />,
+            }}
+          />
+          <Stack.Screen
+            name="AddFriends"
+            component={AddFriends}
+            options={{
+              headerShown: true,
+              headerTitle: "Add Friend",
+              headerBackTitle: " ",
             }}
           />
         </Stack.Group>
