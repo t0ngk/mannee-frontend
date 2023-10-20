@@ -29,7 +29,7 @@ const Data = [
 export default function OnCreatingSub({ navigation, route }) {
     const { name, price, img, color, firstbill, cycle, daytopay, page } = route.params;
     return (
-        <ScrollView className="overflow-auto w-full h-full">
+        <ScrollView className="overflow-auto w-full h-full max-h-[800px]">
             <View className="m-[20px]">
                 <FormEditAddSub
                     Subprice={price}
@@ -42,7 +42,7 @@ export default function OnCreatingSub({ navigation, route }) {
                     page={'NewSubscription'}
                 />
             </View>
-            <View className="mx-[20px]">
+            <View className="mx-[20px] h-[25%]">
                 <Member
                     data={Data}
                     stage="edit"
