@@ -1,33 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, ImageBackground, View, Text } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, Image, FlatList} from 'react-native';
+// import Modal from "react-native-modal";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function ImagePickerExample() {
-  const [image, setImage] = useState(null);
+const dataImage = [{
+  name: "Netflix",
+  img: 'https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg'
+},
+{
+  name: "Spotify",
+  img: 'https://www.scdn.co/i/_global/open-graph-default.png'
+},
+{
+  name: "Netflix",
+  img: 'https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg'
+},
+{
+  name: "Spotify",
+  img: 'https://www.scdn.co/i/_global/open-graph-default.png'
+},
+{
+  name: "Netflix",
+  img: 'https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg'
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+},
+{
+  name: "Spotify",
+  img: 'https://www.scdn.co/i/_global/open-graph-default.png'
+}];
 
-    console.log(result);
+const numColumns = 4;
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+const ImagePickerExample = ({navigation, route}) => {
+  const {page} = route.params;
+  // const [modalVisible, setModalVisible] = useState(false);
 
+  // const toggleModal = () => {
+  //   setModalVisible(!modalVisible);
+  // };
   return (
-    <View className="items-center justify-center">
-      <TouchableOpacity onPress={pickImage}>
-        <View className="border-[0.25px] p-4 py-5 rounded-3xl">
-          <Text>Add Icon</Text>
+    <SafeAreaView className="flex-1 flex-col m-5 max-w-[400px]">
+      {/* <Modal isVisible={modalVisible}>
+        <View className="rounded-xl flex-col bg-red-400 items-center h-[15%] w-2/3 mx-auto">
+          <Text className="py-4 font-medium text-xl">Are you sure?</Text>
         </View>
-      </TouchableOpacity>
-    </View>
+      </Modal> */}
+      <FlatList
+        data={dataImage}
+        numColumns={numColumns}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={()=> {
+            navigation.navigate(page, {img: item.img})
+          }}>
+            <View className="flex-row items-center border-[1px] rounded-xl p-3 my-2 mx-2">
+              <Image source={{ uri: item.img }} className="w-14 h-14 rounded-full" />
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </SafeAreaView>
   );
-}
+};
+
+
+export default ImagePickerExample;

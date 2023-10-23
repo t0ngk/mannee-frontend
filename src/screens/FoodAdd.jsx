@@ -37,6 +37,15 @@ export default function FoodAdd({}) {
           onChangeText={(e) => setName(e)}
         />
       </View>
+      <View className=" border-b-[0.25px] flex flex-row justify-between items-center py-1">
+        <Text className="font-semibold">Pice</Text>
+        <TextInput
+          value={name}
+          placeholder="Enter Pices"
+          className="p-2 rounded-lg w-28 h-8 ml-2"
+          onChangeText={(e) => setName(e)}
+        />
+      </View>
       <View className=" max-h-[250px] h-[250px] mt-4 ">
         <Member data={Data} stage="add" type="edit" memberType="add"></Member>
       </View>

@@ -1,6 +1,7 @@
 import { TextInput, View, Text, ScrollView } from "react-native";
 import SearchBar from "../components/SearchBar";
 import Member from "../components/Member";
+import BoxRequstFriends from "./BoxRequstFriends";
 
 const Data = [
   {

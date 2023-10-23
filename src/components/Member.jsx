@@ -10,7 +10,7 @@ export default function Member({ data, stage, type, memberType, showheader}) {
   return (
     <View className="h-full">
       <View className="flex items-center">
-        {showheader === 'show' &&(<Text className="text-[17px] font-bold ">Member(s)</Text>)}
+        {showheader === 'show' &&(<Text className="text-[17px] font-bold my-3 ">Member(s)</Text>)}
         <View className="border max-h-[650px] p-3  rounded-xl border-[#CFCFCF] w-full ">
           <View className="items-end">
             {type === "edit" && (

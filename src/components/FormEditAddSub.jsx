@@ -45,7 +45,15 @@ export default function FormEditAddSub({
     <View className="flex flex-col items-center">
       <View className="border-[0.25px] rounded-xl w-full p-4">
         <View className="flex flex-row justify-between">
-          <ImagePickerExample />
+          {/* <ImagePickerExample /> */}
+          <TouchableOpacity onPress={()=> {
+            navigation.navigate("PickIcon", {page: page})
+          }}>
+            {!Subimg &&<View className="items-center p-5 border-[1px] rounded-full">
+              <Text>Add Icon</Text>
+            </View>}
+            {Subimg && <Image source={{ uri: Subimg }} className="w-14 h-14 rounded-full" />}
+          </TouchableOpacity>
           <View className="flex flex-row items-center">
             <Text>฿</Text>
             <TextInput
@@ -94,9 +102,9 @@ export default function FormEditAddSub({
             <DatePicker selectDate={handleDate} />
           </View>
         </View>
-        <View className="border-t-[0.25px] flex flex-row items-center py-3">
+        <View className="border-t-[0.25px] flex flex-row justify-between items-center py-3">
           <Text>Cycle</Text>
-          <Selecter />
+          <Selecter/>
         </View>
       </View>
     </View>

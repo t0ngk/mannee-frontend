@@ -8,9 +8,12 @@ import {
   FlatList,
   ScrollView,
   TextInput,
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import FormEditAddSub from "../components/FormEditAddSub";
 import Member from "../components/Member";
+import Selecter from "../components/Selecter";
 const Data = [
   {
     id: 1,
@@ -38,27 +41,33 @@ export default function EditSubscription({ navigation, route }) {
   const { name, price, img, color, firstbill, cycle, daytopay, page } = route.params;
 
   return (
-    <ScrollView className="overflow-auto w-full h-full max-h-[800px]">
-      <View className="m-[20px]">
-        <FormEditAddSub
-          Subprice={price}
-          Subname={name}
-          Subcolor={color}
-          Subimg={img}
-          Subdate={firstbill}
-          Subcycle={cycle}
-          navigation={'EditSubscription'}
-          page={page}
-        />
-      </View>
-      <View className="mx-[20px] h-[25%]">
-        <Member
-          data={Data}
-          stage="edit"
-          type="edit"
-          memberType="delete"
-        ></Member>
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView className="overflow-auto w-full h-full max-h-[740px">
+        <View className="m-[20px]">
+          <FormEditAddSub
+            Subprice={price}
+            Subname={name}
+            Subcolor={color}
+            Subimg={img}
+            Subdate={firstbill}
+            Subcycle={cycle}
+            navigation={navigation}
+            page={'EditSubscription'}
+          />
+        </View>
+        <View className="mx-[20px] h-[50%]">
+          <Member
+            showheader={'show'}
+            data={Data}
+            type="edit"
+          ></Member>
+        </View>
+        <TouchableOpacity className="items-center my-4" onPress={() => Alert.alert('Delete subscription')}>
+          <View className="px-32 py-3 rounded-xl bg-red-700">
+            <Text className="font-medium text-white">Delete Subsription</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+    </>
   );
 }

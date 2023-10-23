@@ -16,7 +16,8 @@ import FoodAdd from "../screens/FoodAdd";
 import FoodEdit from "../screens/FoodEdit";
 import EditSubscription from "../screens/EditSubscription";
 import AddFriends from "../screens/AddFriends";
-
+import BoxRequstFriends from "../screens/BoxRequstFriends";
+import ImagePickerExample from "../components/ImgPicker";
 const Stack = createStackNavigator();
 
 export default function AuthNavigation() {
@@ -136,6 +137,24 @@ export default function AuthNavigation() {
             options={{
               headerShown: true,
               headerTitle: "Add Friend",
+              headerBackTitle: " ",
+            }}
+          />
+          <Stack.Screen
+            name="BoxRequstFriends"
+            component={BoxRequstFriends}
+            options={{
+              headerShown: true,
+              headerTitle: "Friend Request",
+              headerBackTitle: " ",
+            }}
+          />
+          <Stack.Screen
+            name="PickIcon"
+            component={ImagePickerExample}
+            options={{
+              headerShown: true,
+              headerTitle: "Icon Image",
               headerBackTitle: " ",
             }}
           />

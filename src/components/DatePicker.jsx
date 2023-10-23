@@ -24,7 +24,6 @@ const DatePicker = ({selectDate}) => {
       <Button title=">" onPress={showDatePicker} />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
         textColor="#000"

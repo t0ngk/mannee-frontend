@@ -37,13 +37,13 @@ export default function DetailSubscription({ navigation, route }) {
           <Text className="text-xl font-light">First Bill</Text>
           <Text className="text-xl font-light">{firstbill}</Text>
         </View>
-        <View className="flex flex-col items-center my-10 pt-7 gap-2">
+        <View className="flex flex-col items-center my-6 pt-7 gap-2">
           <Text className="text-4xl">Next bill in</Text>
           <Text className="text-7xl">{daytopay}</Text>
           <Text className="text-4xl">Days</Text>
         </View>
         <View className=" max-h-[300px] h-[290px]  mx-[20px]">
-          <Member data={Data} memberType="none"></Member>
+          <Member data={Data} showheader={'show'} memberType={'kill'}></Member>
         </View>
       </ScrollView>
     </View>
