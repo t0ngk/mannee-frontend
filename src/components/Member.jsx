@@ -30,7 +30,7 @@ export default function Member({ data, stage, type, memberType, showheader }) {
                 key={item.id}
                 id={item.id}
                 img={item.img}
-                name={item.name}
+                name={item.username}
               ></MemberStructure>
             ))}
           </ScrollView>

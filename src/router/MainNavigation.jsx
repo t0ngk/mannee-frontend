@@ -29,7 +29,6 @@ const data = [{
 ]
 
 export default function MainNavigation() {
-  const [notificationCount, setNotificationCount] = useState(2);
   return (
     <tab.Navigator initialRouteName="Subscriptions">
       <tab.Screen
@@ -56,26 +55,26 @@ export default function MainNavigation() {
         })}
       />
       <tab.Screen name="Friends" component={Friends} options={({ navigation, props }) => ({
-        headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate("AddFriends")}>
-            <View className="mx-4">
-              <Text className="text-4xl font-light">+</Text>
-            </View>
-          </TouchableOpacity>
-        ),
+        // headerRight: () => (
+        //   <TouchableOpacity onPress={() => navigation.navigate("AddFriends")}>
+        //     <View className="mx-4">
+        //       <Text className="text-4xl font-light">+</Text>
+        //     </View>
+        //   </TouchableOpacity>
+        // ),
         tabBarIcon: () => {
           return <Feather name="users" size={24} color="black" />;
         },
-        headerLeft: () => {
-          return (
-            <TouchableOpacity onPress={() => navigation.navigate("BoxRequstFriends", {data: data})}>
-              <View className="mx-4">
-                {notificationCount > 0 &&<Badge count={notificationCount} />}
-                <Octicons name="person-add" size={24} color="black" />
-              </View>
-            </TouchableOpacity>
-          )
-        },
+        // headerLeft: () => {
+        //   return (
+        //     <TouchableOpacity onPress={() => navigation.navigate("BoxRequstFriends", {data: data})}>
+        //       <View className="mx-4">
+        //         {notificationCount > 0 &&<Badge count={notificationCount} />}
+        //         <Octicons name="person-add" size={24} color="black" />
+        //       </View>
+        //     </TouchableOpacity>
+        //   )
+        // },
       })} />
     </tab.Navigator>
   );

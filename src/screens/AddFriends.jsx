@@ -1,83 +1,67 @@
 import { Image, View, Text, Button, FlatList, ScrollView } from "react-native";
 import SearchBar from "../components/SearchBar";
 import Member from "../components/Member";
+import { useIsFocused } from "@react-navigation/core";
+import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 
 
-const Data = [
-    {
-      id: 1,
-      name: "User1",
-      img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-    },
-    {
-      id: 2,
-      name: "User2",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 3,
-      name: "User3",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 4,
-      name: "User4",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 1,
-      name: "User1",
-      img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-    },
-    {
-      id: 2,
-      name: "User2",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 3,
-      name: "User3",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 4,
-      name: "User4",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 1,
-      name: "User1",
-      img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-    },
-    {
-      id: 2,
-      name: "User2",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 3,
-      name: "User3",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-    {
-      id: 4,
-      name: "User4",
-      img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    },
-  ];
 
-export default function AddFriends({}) {
-    return (
-        <ScrollView className="h-full my-4  max-h-[770px]">
-            <View className="mx-5">
-                <SearchBar/>
-            </View>
-            <View className="mx-5 mt-2">
-                <Member
-                data={Data}
-                memberType={'addfirend'}
-                />
-            </View>
-        </ScrollView>
-    );
+export default function AddFriends({ }) {
+  const isFocused = useIsFocused();
+  const [text, setText] = useState('');
+  const [allfriend, setAllfriend] = useState([]);
+
+  const getnamefriend = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/friend/search/${text}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 200) {
+      const result = await res.json();
+      setAllfriend(result);
+      console.log(result);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
+
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log(text.length)
+      if (text.length > 0) {
+        getnamefriend();
+      } else {
+        setAllfriend(null)
+      }
+      console.log('Add Friends is focused')
+    }
+    else {
+      console.log('Add Friends is not focused')
+    }
+  }, [text]);
+
+  return (
+    <ScrollView className="h-full my-4  max-h-[770px]">
+      <View className="mx-5">
+        <SearchBar onChangeText={(e) => { setText(e) }} />
+      </View>
+      {allfriend ? (<View className="mx-5 mt-2">
+        <Member
+          data={allfriend}
+          memberType={'addfirend'}
+        />
+      </View>)
+        :
+        <View className="flex flex-col items-center">
+          <Text className="text-2xl font-normal my-3 ">No Friends</Text>
+        </View>
+      }
+    </ScrollView>
+  );
 }
