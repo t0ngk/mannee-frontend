@@ -1,10 +1,31 @@
-import { TextInput, View, Text } from "react-native";
+import React from 'react';
+import { TextInput as RNTextInput, View, StyleSheet } from 'react-native';
+import { Entypo as Icon } from '@expo/vector-icons';
 
-export default function Input({ label = "Label", placeholder = " " }) {
+export default function Input({ icon, error, touched, ...otherProps }) {
+  const validationColor = !touched ? '#223e4b' : error ? '#FF5A5F' : '#223e4b';
   return (
-    <View className="my-2">
-      <Text className="text-xl text-black font-light">{label}</Text>
-      <TextInput className="border-2 border-gray-300 rounded-lg p-2 w-80 text-xl justify-center my-1" placeholder={placeholder} />
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 48,
+        borderRadius: 8,
+        borderColor: validationColor,
+        borderWidth: StyleSheet.hairlineWidth,
+        padding: 8
+      }}
+    >
+      <View style={{ padding: 8 }}>
+        <Icon name={icon} color={validationColor} size={16} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <RNTextInput
+          underlineColorAndroid='transparent'
+          placeholderTextColor={validationColor}
+          {...otherProps}
+        />
+      </View>
     </View>
   );
 }

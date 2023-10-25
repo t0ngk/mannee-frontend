@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 
+import * as SecureStore from 'expo-secure-store';
 import { Alert, Button, TouchableOpacity, View, Text } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -29,6 +30,8 @@ const data = [{
 ]
 
 export default function MainNavigation() {
+
+
   const [notificationCount, setNotificationCount] = useState(2);
   return (
     <tab.Navigator initialRouteName="Subscriptions">

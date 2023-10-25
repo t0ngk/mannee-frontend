@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { Button, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Button, Text, TouchableOpacity, View } from "react-native";
 
+import { Ionicons } from '@expo/vector-icons';
 import ColorPicker from "react-native-wheel-color-picker";
 import Subscriptions from "../screens/Subscriptions";
 import DetailSubscription from "../screens/DetailSubscription";
@@ -18,11 +19,18 @@ export default function CreatingSubNavigate() {
         options={({ navigation, props }) => ({
           headerBackTitleVisible: false,
           headerRight: () => (
-            <Button
-              title="Add"
-              onPress={() => navigation.navigate("CreatingSub")}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate('CreatingSub')}>
+              <Text className="px-4 text-4xl font-light">+</Text>
+            </TouchableOpacity>
           ),
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => Alert.alert('Profile')}>
+              <View className="mx-4">
+                <Ionicons name="ios-person-outline" size={24} color="black" />
+              </View>
+            </TouchableOpacity>
+          )
+          ,
           headerTitle: "Subscriptions",
           headerTitleStyle: {
             alignSelf: "center",
@@ -36,35 +44,13 @@ export default function CreatingSubNavigate() {
         component={DetailSubscription}
         options={({ route, navigation }) => {
           return {
-            title: route.params.name,
+            headerTitle: 'Subscription',
             headerTitleStyle: {
               alignSelf: "center",
               fontWeight: "bold",
               fontSize: 24,
             },
             headerBackTitleVisible: false,
-            headerRight: () => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("EditSubscription", {
-                      name: route.params.name,
-                      price: route.params.price,
-                      img: route.params.img,
-                      color: route.params.color,
-                      firstbill: route.params.firstbill,
-                      cycle: route.params.cycle,
-                      daytopay: route.params.daytopay,
-                      page: "EditSubscription",
-                    });
-                  }}
-                >
-                  <View className="mx-4">
-                    <Text className="text-lg font-semibold">Edit</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            },
           };
         }}
       />

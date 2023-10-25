@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as SecureStore from 'expo-secure-store';
 
 import { TouchableOpacity, View, Text, Alert, Button } from "react-native";
 
@@ -18,9 +19,18 @@ import EditSubscription from "../screens/EditSubscription";
 import AddFriends from "../screens/AddFriends";
 import BoxRequstFriends from "../screens/BoxRequstFriends";
 import ImagePickerExample from "../components/ImgPicker";
+import { useEffect } from "react";
 const Stack = createStackNavigator();
 
 export default function AuthNavigation() {
+
+  const isSignedIn = async () => {
+    const token = await SecureStore.getItemAsync('token');
+    console.log('User Token is : ' + token)
+    return token;
+  };
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -28,11 +38,12 @@ export default function AuthNavigation() {
           headerShown: false,
         }}
       >
-        <Stack.Group initialRouteName="Login">
+
+        {isSignedIn() == null ? (<Stack.Group initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Registor" component={Registor} />
-          <Stack.Screen name="MainNavigation" component={MainNavigation} />
-        </Stack.Group>
+        </Stack.Group>) : (
+        <Stack.Screen name="MainNavigation" component={MainNavigation} />)}
         <Stack.Group screenOptions={{ presentation: "modal" }}>
           <Stack.Screen name="CreatingSub" component={CreatingSub} />
           <Stack.Screen
@@ -59,19 +70,12 @@ export default function AuthNavigation() {
             component={EditSubscription}
             options={{
               headerShown: true,
+              headerTitleStyle: {
+                alignSelf: "center",
+                fontSize: 22,
+              },
               headerTitle: "Edit Subscription",
               headerBackTitle: " ",
-              headerRight: () => {
-                return (
-                  <TouchableOpacity onPress={({ }) => {
-                    Alert.alert('Edit');
-                  }}>
-                    <View className="mx-4">
-                      <Text className="text-lg font-semibold">Edit</Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              },
             }}
           />
           <Stack.Screen

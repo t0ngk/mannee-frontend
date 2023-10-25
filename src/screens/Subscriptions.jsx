@@ -1,42 +1,45 @@
-import { TextInput, View, Text, FlatList, TouchableOpacity } from "react-native";
+import { TextInput, View, Text, FlatList, TouchableOpacity, Button } from "react-native";
 import dayjs from 'dayjs'
 import Boxsubscription from "../components/Boxsubscription";
-import { useState } from "react";
-import { set } from "date-fns";
+import { useEffect, useState } from "react";
+import * as SecureStore from 'expo-secure-store';
+import { useSubcon } from "../context/subcon";
 
-
-
-
-
-export default function Subscriptions({ navigation }) {
-  const dummyData = [{
-    id: 1,
-    name: "Netflix",
-    price: 169,
-    color: '#E50914',
-    img: 'https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg',
-    firstbill: new Date('2023-10-13T17:02:15.152Z'),
-    cycle: 'Monthly',
-  },
-  {
-    id: 2,
-    name: "Spotify",
-    price: 129,
-    color: '#1DB954',
-    img: 'https://www.scdn.co/i/_global/open-graph-default.png',
-    firstbill: new Date('2023-10-01T17:02:15.152Z'),
-    cycle: 'Monthly',
-  }]
-
+export default function Subscriptions({ navigation, route }) {
+  const [Data, setData] = useState([])
+  const { subcon, updateSubcon } = useSubcon();
+  useEffect(() => {
+    const getSubscriptions = async () => {
+      console.log("Fetching Data")
+      const token = await SecureStore.getItemAsync('token');
+      const api = await fetch('https://mobile.t0ng.dev/subscription', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      if (api.ok) {
+        const res = await api.json();
+        updateSubcon(res)
+        return res
+      } else {
+        const err = await api.json();
+        return err
+      }
+    }
+    getSubscriptions();
+  }, [])
+  // console.log("Data is :", Data)
   const costperWeek = () => {
-    const sum = dummyData.reduce((total, item) => total + item.price, 0);
+    const sum = Object.keys(subcon).reduce((sum, key) => sum + subcon[key].price, 0)
     return sum.toString();
   };
 
   const calculateTotalDatetime = (startDate) => {
     const startdateformat = dayjs().format('YYYY-MM-DD')
     const endDate = dayjs(startDate).add(1, 'M').format('YYYY-MM-DD')
-    console.log(startdateformat, endDate)
+    // console.log(startdateformat, endDate)
     const newStartDate = new Date(startdateformat)
     const startTimestamp = newStartDate.getTime()
     const newEndDate = new Date(endDate)
@@ -55,12 +58,12 @@ export default function Subscriptions({ navigation }) {
         <Text className="font-light">Per week</Text>
         <Text className="self-end text-3xl mt-7">฿ {costperWeek()}</Text>
       </View>
-      <FlatList className="w-full" data={dummyData} renderItem={({ item }) =>
+      <FlatList className="w-full max-h-[550px]" data={Object.keys(subcon)} renderItem={({ item }) =>
         <TouchableOpacity onPress={() => {
-          navigation.navigate("DetailSub", { name: item.name,price: item.price, color: item.color, img: item.img, cycle: item.cycle, firstbill: dayjs(item.firstbill).format('DD-MMM-YYYY'), daytopay: payday })
+          navigation.navigate("DetailSub", { data: item, paid: payday })
           calculateTotalDatetime(item.firstbill)
         }}>
-          <Boxsubscription image={item.img} name={item.name} price={item.price} color={item.color} day={calculateTotalDatetime(item.firstbill)} />
+          <Boxsubscription image={subcon[item].icon} name={subcon[item].name} price={subcon[item].price} color={subcon[item].color} day={calculateTotalDatetime(subcon[item].firstBill)} />
         </TouchableOpacity>
       } />
     </View>

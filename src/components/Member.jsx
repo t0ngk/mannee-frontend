@@ -4,6 +4,7 @@ import { Image, View, Text, Button, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import MemberStructure from "./MemberStructure";
+import { Ionicons } from '@expo/vector-icons';
 export default function Member({ data, stage, type, memberType, showheader}) {
   const keyExtractor = (item) => item.id.toString();
   const navigation = useNavigation();
@@ -23,7 +24,7 @@ export default function Member({ data, stage, type, memberType, showheader}) {
             )}
           </View>
           <ScrollView className="w-full ">
-            <FlatList
+            { data == [] ?(<FlatList
               keyExtractor={keyExtractor}
               data={data}
               renderItem={({ item }) => (
@@ -34,7 +35,12 @@ export default function Member({ data, stage, type, memberType, showheader}) {
                   name={item.name}
                 ></MemberStructure>
               )}
-            />
+            />) : (
+              <View className="flex flex-col items-center justify-center gap-4 py-2">
+                <Ionicons name="ios-sad-outline" size={60} color="black" />
+                <Text className="text-xl font-medium">No Member</Text>
+              </View>
+            )}
           </ScrollView>
         </View>
       </View>

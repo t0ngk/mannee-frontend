@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 import {
   Image,
   View,
@@ -13,52 +13,147 @@ import {
 } from "react-native";
 import FormEditAddSub from "../components/FormEditAddSub";
 import Member from "../components/Member";
-import Selecter from "../components/Selecter";
-const Data = [
-  {
-    id: 1,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 2,
-    name: "User2",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 3,
-    name: "User3",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 4,
-    name: "User4",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-];
+import * as SecureStore from 'expo-secure-store';
+import { useSubcon } from "../context/subcon";
+
 export default function EditSubscription({ navigation, route }) {
-  console.log(route.params);
-  const { name, price, img, color, firstbill, cycle, daytopay, page } = route.params;
+  const { subcon, updateSubcon, reloadSubcon } = useSubcon();
+  const { data, paid } = route.params;
+  console.log('edit data', subcon[data])
+  const [newPrice, setNewPrice] = useState(subcon[data]['price']);
+  const [newName, setNewName] = useState(subcon[data]['name']);
+  const [newDate, setNewDate] = useState(dayjs(subcon[data]['firstBill']).format("MM/DD/YYYY"));
+  const [newCycle, setNewCycle] = useState(subcon[data]['cycle']);
+  const [newCycleFreq, setNewCycleFreq] = useState(subcon[data]['cycleFreq']);
+  const [newCurrency, setNewCurrency] = useState(subcon[data]['currency']);
+  const [member, setMember] = useState([])
+  const api = async () => {
+    console.log('data', data)
+
+    const Data = {
+      price: parseInt(newPrice),
+      name: newName,
+      currency: newCurrency,
+      firstBill: newDate,
+      cycle: newCycle,
+      cycleFreq: parseInt(newCycleFreq),
+      icon: subcon[data]['icon'],
+      color: subcon[data]['color'],
+      member: member
+    }
+    console.log('data to send', Data)
+    const token = await SecureStore.getItemAsync('token');
+    const api = await fetch(`https://mobile.t0ng.dev/subscription/${subcon[data]['id']}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(Data)
+    });
+    if (api.ok) {
+      const res = await api.json();
+      // updateSubcon({
+      //   ...subcon,
+      //   [data]: {
+      //     ...subcon[data],
+      //     ...res
+      //   }
+      // })
+      await reloadSubcon();
+
+      navigation.navigate('DetailSub', { data: data, paid: paid })
+      console.log(res)
+      Alert.alert("Edit Success");
+      return res
+    } else {
+      const err = await api.json();
+      Alert.alert("Error : " + err.error);
+    }
+  }
+
+
+  const bindCurrency = (currency) => {
+    try {
+      setNewCurrency(currency)
+    } catch (error) {
+      return
+    }
+  }
+
+  const bindCycle = (cycleFreq, cycle) => {
+    try {
+      setNewCycle(cycle)
+      setNewCycleFreq(cycleFreq)
+    }
+    catch (error) {
+      return
+    }
+  }
+  const bindDate = (date) => {
+    try {
+      setNewDate(date)
+    } catch (error) {
+      return
+    }
+  }
+  const bindName = (name) => {
+    try {
+      setNewName(name)
+    } catch (error) {
+      return
+    }
+  }
+  const bindPrice = (price) => {
+    try {
+      setNewPrice((price))
+    } catch (error) {
+      return
+    }
+  }
+
+  navigation.setOptions({
+    headerRight: () => (
+      <TouchableOpacity onPress={() => api()}>
+        <View className="mx-4">
+          <Text className="font-medium text-xl text-black">Edit</Text>
+        </View>
+      </TouchableOpacity>
+    ),
+  });
 
   return (
     <>
       <ScrollView className="overflow-auto w-full h-full max-h-[740px">
         <View className="m-[20px]">
           <FormEditAddSub
-            Subprice={price}
-            Subname={name}
-            Subcolor={color}
-            Subimg={img}
-            Subdate={firstbill}
-            Subcycle={cycle}
+            data={subcon[data]}
+            Subprice={subcon[data]['price']}
+            Subname={subcon[data]['name']}
+            Subcolor={subcon[data]['color']}
+            Subimg={subcon[data]['icon']}
+            Subdate={dayjs(subcon[data]['firstBill']).format("DD/MMMM/YYYY")}
+            Subcycle={subcon[data]['cycle']}
             navigation={navigation}
             page={'EditSubscription'}
+            bindPrice={bindPrice}
+            newPrice={newPrice}
+            bindName={bindName}
+            newName={newName}
+            newDate={newDate}
+            bindDate={bindDate}
+            newCycle={newCycle}
+            bindCycle={bindCycle}
+            newCycleFreq={newCycleFreq}
+            bindCycleFreq={bindCycle}
+            bindCurrency={bindCurrency}
+            index={data}
           />
         </View>
         <View className="mx-[20px] h-[50%]">
           <Member
             showheader={'show'}
-            data={Data}
+            data={subcon[data]}
             type="edit"
           ></Member>
         </View>
