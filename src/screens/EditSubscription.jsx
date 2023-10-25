@@ -13,11 +13,10 @@ import {
 } from "react-native";
 import FormEditAddSub from "../components/FormEditAddSub";
 import Member from "../components/Member";
-import Selecter from "../components/Selecter";
 import { useColor } from "../stores/colorContext";
 import { useIcon } from "../stores/iconContext";
-import { useIdSub, useSubscription } from "../stores/subscriptionContext";
 import dayjs from "dayjs";
+import * as SecureStore from "expo-secure-store";
 
 const Data = [
   {
@@ -44,35 +43,74 @@ const Data = [
 
 export default function EditSubscription({ navigation, route }) {
   console.log("data is ", route.params);
-  const { name, price, img, firstbill, cycle, daytopay, page, id } = route.params;
+  const { name, price, img, firstbill, cycle, daytopay, page, id } =
+    route.params;
   const [newprice, setNewprice] = useState(price || 0);
   const [newname, setNewname] = useState(name || "");
   const [newdate, setNewdate] = useState(firstbill || "");
   const [newcycle, setNewcycle] = useState(cycle || "");
   const [newcycleFeqy, setNewcycleFeqy] = useState(daytopay || "");
   const [newimg, setNewimg] = useState(img || "");
-  const [newcolor, setNewcolor] = useState(color || '');
+  const [newcolor, setNewcolor] = useState(color || "");
   const { icon, updateIcon } = useIcon();
   const { color, updateColor } = useColor();
-  const { fetchSubscription } = useSubscription();
-  // const [newcolor, setNewcolor] = useState(color || '');
+  
 
-  const postSubscription = async () => {
+  const editSubscription = async () => {
+    const token = await SecureStore.getItemAsync("token");
     const Data = {
       icon: icon,
       currency: "฿",
       price: parseInt(newprice),
       name: newname,
       color: color,
-      firstBill: '10/23/2023',
-      cycle: "WEEKLY",
-      cycleFreq: 1,
-      member: []
-    }
-    console.log("Before",Data);
-    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzU2YWFjMzE0MWIxMTNkZmVkYWExZiIsImlhdCI6MTY5ODAwNDA4Mn0.UFyhW-F0EXt8MBoqbbsSVwq-bQiWRntWxmGI4JFtMf8`;
-    const response = await fetch(`https://mobile.t0ng.dev/subscription/${id}`, {
+      firstBill: dayjs(Date(newdate)).format("MM/DD/YYYY"),
+      cycle: newcycle['type'],
+      cycleFreq: parseInt(newcycle['dayofweek']),
+      member: [],
+    };
+    console.log(Data);
+    const response = await fetch(`http://localhost:3000/subscription/${id}`, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(Data),
+    });
+    if (response.ok) {
+      console.log("Pasing json")
+      const data = await response.json();
+      console.log(data);
+      Alert.alert("Create Subscription Success");
+      navigation.navigate("DetailSub", {
+        ...data,
+        img: data.icon,
+        firstbill: dayjs(data.firstbill).format("DD-MMM-YYYY"),
+        daytopay: 0,
+      });
+    } else {
+      const error = await response.json();
+      console.log(error);
+      Alert.alert("Create Subscription Fail");
+    }
+  };
+
+  const addSubscription = async () => {
+    const Data = {
+      icon: icon,
+      currency: "฿",
+      price: parseInt(newprice),
+      name: newname,
+      color: color,
+      firstBill: dayjs(Date(newdate)).format("MM/DD/YYYY"),
+      cycle: newcycle['type'],
+      cycleFreq: parseInt(newcycle['dayofweek']),
+      member: [],
+    };
+    const token = await SecureStore.getItemAsync("token");
+    const response = await fetch("http://localhost:3000/subscription/new", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -82,31 +120,53 @@ export default function EditSubscription({ navigation, route }) {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      Alert.alert("Create Subscription Success")
+      Alert.alert("Create Subscription Success");
       navigation.navigate("DetailSub", {
         ...data,
         img: data.icon,
         firstbill: dayjs(data.firstbill).format("DD-MMM-YYYY"),
         daytopay: 0,
       });
-    }
-    else {
+    } else {
       const error = await response.json();
       console.log(error);
       Alert.alert("Create Subscription Fail");
     }
+  };
 
-  }
+  const deteleSubscription = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const response = await fetch(`http://localhost:3000/subscription/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      Alert.alert("Delete Subscription Success");
+      navigation.popToTop();
+      // navigation.navigate("Subscriptions");
+    }
+  };
   navigation.setOptions({
     title: id == "new" ? "Create Subscription" : "Edit Subscription",
     headerRight: () => (
       <TouchableOpacity
         onPress={() => {
-          postSubscription();
+          if (id == "new") {
+            addSubscription();
+          } else {
+            editSubscription();
+          }
         }}
       >
-        <View className="px-4 py-2 rounded-xl bg-blue-700">
-          <Text className="font-medium text-white">Save</Text>
+        <View className="mx-4">
+          <Text className="text-lg font-semibold">
+            {id == "new" ? "Add" : "Edit"}
+          </Text>
         </View>
       </TouchableOpacity>
     ),
@@ -138,7 +198,7 @@ export default function EditSubscription({ navigation, route }) {
         </View>
         <TouchableOpacity
           className="items-center my-4"
-          onPress={() => Alert.alert("Delete subscription")}
+          onPress={() => (deteleSubscription())}
         >
           <View className="px-32 py-3 rounded-xl bg-red-700">
             <Text className="font-medium text-white">Delete Subsription</Text>

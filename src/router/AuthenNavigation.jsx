@@ -18,9 +18,17 @@ import EditSubscription from "../screens/EditSubscription";
 import AddFriends from "../screens/AddFriends";
 import BoxRequstFriends from "../screens/BoxRequstFriends";
 import ImagePickerExample from "../components/ImgPicker";
+import * as SecureStore from 'expo-secure-store';
 const Stack = createStackNavigator();
 
 export default function AuthNavigation() {
+
+  const isSignedIn = async () => {
+    const token = await SecureStore.getItemAsync('token');
+    console.log('User Token is : ' + token)
+    return token;
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -28,11 +36,11 @@ export default function AuthNavigation() {
           headerShown: false,
         }}
       >
-        <Stack.Group initialRouteName="Login">
+        {isSignedIn() == null ? (<Stack.Group initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Registor" component={Registor} />
-          <Stack.Screen name="MainNavigation" component={MainNavigation} />
-        </Stack.Group>
+        </Stack.Group>) : (
+        <Stack.Screen name="MainNavigation" component={MainNavigation} />)}
         <Stack.Group screenOptions={{ presentation: "modal" }}>
           <Stack.Screen name="CreatingSub" component={CreatingSub} />
           <Stack.Screen

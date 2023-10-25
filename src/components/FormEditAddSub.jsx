@@ -16,6 +16,7 @@ import Selecter from "../components/Selecter";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useColor } from "../stores/colorContext";
 import { useIcon } from "../stores/iconContext";
+import dayjs from "dayjs";
 
 export default function FormEditAddSub({
   navigation,
@@ -34,8 +35,9 @@ export default function FormEditAddSub({
   bindcolor,
 }) {
   const handleDate = (date) => {
-    var date = new Date(date);
-    var formattedDate = format(date, "MM/dd/yyyy");
+    console.log(date);
+    const newdate = new Date(date);
+    const formattedDate = dayjs(newdate).format("MM/DD/YYYY");
     console.log(formattedDate);
     binddate(formattedDate);
     // setDate(formattedDate);
@@ -46,19 +48,19 @@ export default function FormEditAddSub({
 
   useEffect(() => {
     updateIcon(Subimg);
-    bindimg(Subimg);
     console.log("icon chang to",Subimg);
   }, [Subimg]);
   
   useEffect(() => {
     updateColor(Subcolor);
-    bindcolor(Subcolor);
   }, [Subcolor]);
 
   const handleselect = (cycle) => {
     bindcycle(cycle);
     console.log(cycle);
   };
+
+  console.log(Subprice, bindprice)
 
   // const [price, setPrice] = useState(Subprice);
   // const [name, setName] = useState(Subname);

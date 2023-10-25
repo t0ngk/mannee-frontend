@@ -1,6 +1,6 @@
 import { Text, View, Image, ScrollView } from "react-native";
 import Member from "../components/Member";
-
+import dayjs from "dayjs";
 const Data = [
   {
     id: 1,
@@ -18,14 +18,24 @@ const Data = [
     img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
   },
   {
-    id: 3,
+    id: 4,
     name: "User1",
     img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
   },
 ];
 export default function DetailSubscription({ navigation, route }) {
+
+  const calculateTotalDatetime = (startDate) => {
+    const today = dayjs();
+    const start = dayjs(Date(startDate));
+    const diff = today.diff(start, "day");
+    console.log(diff);
+    return diff;
+  };
+
   console.log(route.params);
-  const { name, price, img, color, firstbill, cycle, daytopay, id } = route.params;
+  const { price, img, firstbill, daytopay } = route.params;
+  const firstbillDate = dayjs(Date(firstbill)).format("MM/DD/YYYY");
   return (
     <View className="flex flex-col w-full bg-white h-full">
       <ScrollView>
@@ -35,11 +45,11 @@ export default function DetailSubscription({ navigation, route }) {
         </View>
         <View className="flex flex-row items-center justify-between mx-8">
           <Text className="text-xl font-light">First Bill</Text>
-          <Text className="text-xl font-light">{firstbill}</Text>
+          <Text className="text-xl font-light">{firstbillDate}</Text>
         </View>
         <View className="flex flex-col items-center my-6 pt-7 gap-2">
           <Text className="text-4xl">Next bill in</Text>
-          <Text className="text-7xl">{daytopay}</Text>
+          <Text className="text-7xl">{calculateTotalDatetime(firstbill)}</Text>
           <Text className="text-4xl">Days</Text>
         </View>
         <View className=" max-h-[300px] h-[290px]  mx-[20px]">

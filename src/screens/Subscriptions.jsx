@@ -23,10 +23,6 @@ export default function Subscriptions({ navigation }) {
     }
   }, [navigation, isFocused]);
 
-  useEffect(() => {
-    console.log(subscription)
-  }, [subscription]);
-
   const costperWeek = () => {
     const sum = subscription?.reduce((total, item) => total + item.price, 0);
     return sum?.toString();
@@ -69,7 +65,7 @@ export default function Subscriptions({ navigation }) {
                 color: item.color,
                 img: item.icon,
                 cycle: item.cycle,
-                firstbill: dayjs(item.firstbill).format("DD-MMM-YYYY"),
+                firstbill: dayjs(item.firstbill).format("MM/DD/YYYY"),
                 daytopay: payday,
               });
               calculateTotalDatetime(item.firstbill);

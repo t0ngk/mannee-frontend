@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import * as SecureStore from "expo-secure-store";
 
 const context = createContext();
 
@@ -11,8 +12,8 @@ export function SubscriptionContextProvider({ children }) {
     };
 
     const fetchSubscription = async () => {
-        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzU2YWFjMzE0MWIxMTNkZmVkYWExZiIsImlhdCI6MTY5ODAwNDA4Mn0.UFyhW-F0EXt8MBoqbbsSVwq-bQiWRntWxmGI4JFtMf8`;
-        const response = await fetch("https://mobile.t0ng.dev/subscription", {
+        const token = await SecureStore.getItemAsync("token");
+        const response = await fetch("http://localhost:3000/subscription", {
           headers: {
             Authorization: `Bearer ${token}`
           }

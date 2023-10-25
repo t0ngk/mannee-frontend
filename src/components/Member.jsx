@@ -1,16 +1,17 @@
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Image, View, Text, Button, FlatList, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import MemberStructure from "./MemberStructure";
-export default function Member({ data, stage, type, memberType, showheader}) {
-  const keyExtractor = (item) => item.id.toString();
+export default function Member({ data, stage, type, memberType, showheader }) {
   const navigation = useNavigation();
   return (
     <View className="h-full">
       <View className="flex items-center">
-        {showheader === 'show' &&(<Text className="text-[17px] font-bold my-3 ">Member(s)</Text>)}
+        {showheader === "show" && (
+          <Text className="text-[17px] font-bold my-3 ">Member(s)</Text>
+        )}
         <View className="border max-h-[650px] p-3  rounded-xl border-[#CFCFCF] w-full ">
           <View className="items-end">
             {type === "edit" && (
@@ -23,18 +24,15 @@ export default function Member({ data, stage, type, memberType, showheader}) {
             )}
           </View>
           <ScrollView className="w-full ">
-            <FlatList
-              keyExtractor={keyExtractor}
-              data={data}
-              renderItem={({ item }) => (
-                <MemberStructure
-                  memberType={memberType}
-                  id={item.id}
-                  img={item.img}
-                  name={item.name}
-                ></MemberStructure>
-              )}
-            />
+            {data.map((item) => (
+              <MemberStructure
+                memberType={memberType}
+                key={item.id}
+                id={item.id}
+                img={item.img}
+                name={item.name}
+              ></MemberStructure>
+            ))}
           </ScrollView>
         </View>
       </View>
