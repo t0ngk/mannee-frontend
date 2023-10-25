@@ -43,20 +43,22 @@ const Data = [
 
 export default function EditSubscription({ navigation, route }) {
   console.log("data is ", route.params);
-  const { name, price, img, firstbill, cycle, daytopay, page, id } =
+  const { name, price, img, firstbill, cycle, cycleFreq , daytopay, page, id } =
     route.params;
   const [newprice, setNewprice] = useState(price || 0);
   const [newname, setNewname] = useState(name || "");
   const [newdate, setNewdate] = useState(firstbill || "");
   const [newcycle, setNewcycle] = useState(cycle || "");
-  const [newcycleFeqy, setNewcycleFeqy] = useState(daytopay || "");
+  const [newcycleFeqy, setNewcycleFeqy] = useState(cycleFreq || "");
   const [newimg, setNewimg] = useState(img || "");
   const [newcolor, setNewcolor] = useState(color || "");
   const { icon, updateIcon } = useIcon();
   const { color, updateColor } = useColor();
   
+  console.log("newcycle is ", newcycleFeqy)
 
   const editSubscription = async () => {
+    console.log(firstbill)
     const token = await SecureStore.getItemAsync("token");
     const Data = {
       icon: icon,
@@ -64,9 +66,9 @@ export default function EditSubscription({ navigation, route }) {
       price: parseInt(newprice),
       name: newname,
       color: color,
-      firstBill: dayjs(Date(newdate)).format("MM/DD/YYYY"),
-      cycle: newcycle['type'],
-      cycleFreq: parseInt(newcycle['dayofweek']),
+      firstBill: newdate,
+      cycle: "MONTHLY",
+      cycleFreq: parseInt(newcycleFeqy),
       member: [],
     };
     console.log(Data);
@@ -86,7 +88,7 @@ export default function EditSubscription({ navigation, route }) {
       navigation.navigate("DetailSub", {
         ...data,
         img: data.icon,
-        firstbill: dayjs(data.firstbill).format("DD-MMM-YYYY"),
+        firstbill: data.firstBill,
         daytopay: 0,
       });
     } else {
@@ -103,9 +105,9 @@ export default function EditSubscription({ navigation, route }) {
       price: parseInt(newprice),
       name: newname,
       color: color,
-      firstBill: dayjs(Date(newdate)).format("MM/DD/YYYY"),
-      cycle: newcycle['type'],
-      cycleFreq: parseInt(newcycle['dayofweek']),
+      firstBill: newdate,
+      cycle: "MONTHLY",
+      cycleFreq: parseInt(newcycleFeqy),
       member: [],
     };
     const token = await SecureStore.getItemAsync("token");
@@ -124,7 +126,7 @@ export default function EditSubscription({ navigation, route }) {
       navigation.navigate("DetailSub", {
         ...data,
         img: data.icon,
-        firstbill: dayjs(data.firstbill).format("DD-MMM-YYYY"),
+        firstbill: data.firstBill,
         daytopay: 0,
       });
     } else {
@@ -182,6 +184,7 @@ export default function EditSubscription({ navigation, route }) {
             bindcycle={(cycle) => setNewcycle(cycle)}
             bindimg={(img) => setNewimg(img)}
             bindcolor={(color) => setNewcolor(color)}
+            bindcycleFeqy={(cycleFeqy) => setNewcycleFeqy(cycleFeqy)}
             SubcycleFeqy={newcycleFeqy}
             Subprice={newprice}
             Subname={newname}

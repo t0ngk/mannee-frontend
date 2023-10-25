@@ -26,6 +26,8 @@ export default function FormEditAddSub({
   Subdate,
   Subcycle,
   Subimg,
+  SubcycleFeqy,
+  bindcycleFeqy,
   page,
   bindprice,
   bindname,
@@ -35,12 +37,7 @@ export default function FormEditAddSub({
   bindcolor,
 }) {
   const handleDate = (date) => {
-    console.log(date);
-    const newdate = new Date(date);
-    const formattedDate = dayjs(newdate).format("MM/DD/YYYY");
-    console.log(formattedDate);
-    binddate(formattedDate);
-    // setDate(formattedDate);
+    binddate(dayjs(date).format("YYYY-MM-DD"));
   };
 
   const { color, updateColor } = useColor();
@@ -55,8 +52,10 @@ export default function FormEditAddSub({
     updateColor(Subcolor);
   }, [Subcolor]);
 
+  console.log(SubcycleFeqy)
+
   const handleselect = (cycle) => {
-    bindcycle(cycle);
+    bindcycleFeqy(parseInt(cycle));
     console.log(cycle);
   };
 
@@ -115,10 +114,10 @@ export default function FormEditAddSub({
         <View className="border-t-[0.25px] flex flex-row justify-between items-center py-3">
           <View className="flex flex-row items-center">
             <Text>Color</Text>
-            <View
+            {/* <View
               className="mx-2 w-6 h-6 rounded-full"
               style={{ backgroundColor: color }}
-            ></View>
+            ></View> */}
           </View>
           <View className="flex flex-row items-center">
             <TouchableOpacity
@@ -136,15 +135,15 @@ export default function FormEditAddSub({
         <View className="border-t-[0.25px] flex flex-row justify-between items-center py-3">
           <Text>First Bill</Text>
           <View className="flex flex-row items-center">
-            <Text>{Subdate}</Text>
+            <Text>{dayjs(Subdate).format('DD/MM/YYYY')}</Text>
             <DatePicker selectDate={handleDate} />
           </View>
         </View>
         <View className="border-t-[0.25px] flex flex-row justify-between items-center py-3">
           <Text>Cycle</Text>
           <View className="flex flex-row items-center">
-            { Subcycle['dayofweek'] != null &&<Text>{Subcycle['dayofweek'] + ' ' + Subcycle['type']}</Text>}
-            <Selecter handleselect={handleselect} />
+            <Text>{SubcycleFeqy}</Text>
+            <Selecter handleselect={handleselect} defaultValue={SubcycleFeqy} />
           </View>
         </View>
       </View>

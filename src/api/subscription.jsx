@@ -17,7 +17,7 @@ const editSubscription = async (url, data) => {
     navigation.navigate("DetailSub", {
       ...data,
       img: data.icon,
-      firstbill: dayjs(data.firstbill).format("DD-MMM-YYYY"),
+      firstbill: data.firstbill,
       daytopay: 0,
     });
   } else {

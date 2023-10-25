@@ -55,6 +55,7 @@ export default function CreatingSubNavigate() {
                       img: route.params.img,
                       color: route.params.color,
                       firstbill: route.params.firstbill,
+                      cycleFreq: route.params.cycleFreq,
                       cycle: route.params.cycle,
                       daytopay: route.params.daytopay,
                       page: "EditSubscription",

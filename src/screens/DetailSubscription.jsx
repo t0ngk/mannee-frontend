@@ -33,9 +33,25 @@ export default function DetailSubscription({ navigation, route }) {
     return diff;
   };
 
+
+  function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
+    const registration = dayjs(registrationDate);
+    const today = dayjs();
+    const nextDueDate = registration.add(paymentIntervalMonths, 'month');
+    if (nextDueDate.isAfter(today)) {
+      return nextDueDate;
+    } else {
+      while (nextDueDate.isBefore(today)) {
+        nextDueDate.add(paymentIntervalMonths, 'month');
+      }
+      return nextDueDate;
+    }
+  }
+
   console.log(route.params);
-  const { price, img, firstbill, daytopay } = route.params;
-  const firstbillDate = dayjs(Date(firstbill)).format("MM/DD/YYYY");
+  const { price, img, firstbill, cycleFreq , daytopay } = route.params;
+  const nextbill = calculateMembershipDueDate(firstbill, cycleFreq);
+  const diff = dayjs(nextbill).diff(dayjs(), "day");
   return (
     <View className="flex flex-col w-full bg-white h-full">
       <ScrollView>
@@ -45,11 +61,11 @@ export default function DetailSubscription({ navigation, route }) {
         </View>
         <View className="flex flex-row items-center justify-between mx-8">
           <Text className="text-xl font-light">First Bill</Text>
-          <Text className="text-xl font-light">{firstbillDate}</Text>
+          <Text className="text-xl font-light">{dayjs(firstbill).format('DD/MM/YYYY')}</Text>
         </View>
         <View className="flex flex-col items-center my-6 pt-7 gap-2">
           <Text className="text-4xl">Next bill in</Text>
-          <Text className="text-7xl">{calculateTotalDatetime(firstbill)}</Text>
+          <Text className="text-7xl">{diff + 1}</Text>
           <Text className="text-4xl">Days</Text>
         </View>
         <View className=" max-h-[300px] h-[290px]  mx-[20px]">

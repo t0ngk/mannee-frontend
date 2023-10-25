@@ -42,6 +42,26 @@ export default function Subscriptions({ navigation }) {
     return Math.ceil(diffDay);
   };
 
+  function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
+    const registration = dayjs(registrationDate);
+    const today = dayjs();
+    const nextDueDate = registration.add(paymentIntervalMonths, 'month');
+    if (nextDueDate.isAfter(today)) {
+      return nextDueDate;
+    } else {
+      while (nextDueDate.isBefore(today)) {
+        nextDueDate.add(paymentIntervalMonths, 'month');
+      }
+      return nextDueDate;
+    }
+  }
+
+  function diffFromToday(date) {
+    const today = dayjs();
+    const dueDate = dayjs(date);
+    return dueDate.diff(today, 'day');
+  }
+
   const [payday, setPayday] = useState(0);
   return (
     <View className="flex flex-col items-center mx-4 my-2">
@@ -65,7 +85,9 @@ export default function Subscriptions({ navigation }) {
                 color: item.color,
                 img: item.icon,
                 cycle: item.cycle,
-                firstbill: dayjs(item.firstbill).format("MM/DD/YYYY"),
+                cycleFreq: item.cycleFreq,
+                firstbill: item.firstBill,
+                ownerId: item.ownerId,
                 daytopay: payday,
               });
               calculateTotalDatetime(item.firstbill);
@@ -76,7 +98,7 @@ export default function Subscriptions({ navigation }) {
               name={item.name}
               price={item.price}
               color={item.color}
-              day={calculateTotalDatetime(item.firstbill)}
+              day={diffFromToday(calculateMembershipDueDate(item.firstBill, item.cycleFreq))}
             />
           </TouchableOpacity>
         )}

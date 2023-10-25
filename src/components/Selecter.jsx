@@ -6,12 +6,11 @@ import SegmentedPicker from 'react-native-segmented-picker';
 
 
 
-export default function Selecter({handleselect}) {
+export default function Selecter({handleselect, defaultValue}) {
     const segmentedPicker = useRef();
 
     const onConfirm = (selections) => {
-        console.info(selections);
-        handleselect(selections)
+        handleselect(selections.dayofweek)
         // => { col_1: "option_1", col_2: "option_3" }
     }
     return (
@@ -24,6 +23,9 @@ export default function Selecter({handleselect}) {
                     confirmText="Confirm"
                     ref={segmentedPicker}
                     onConfirm={onConfirm}
+                    defaultSelections={{
+                        dayofweek: `${defaultValue}`,
+                    }}
                     options={[
                         {
                             key: 'dayofweek',
@@ -61,14 +63,14 @@ export default function Selecter({handleselect}) {
                                 { label: '31', value: '31' },
                             ],
                         },
-                        {
-                            key: 'type',
-                            items: [
-                                { label: 'Weekly', value: 'WEEKLY' },
-                                { label: 'Monthly', value: 'MONTHLY' },
-                                { label: 'Yearly', value: 'YEARLY' },
-                            ],
-                        },
+                        // {
+                        //     key: 'type',
+                        //     items: [
+                        //         { label: 'Weekly', value: 'WEEKLY' },
+                        //         { label: 'Monthly', value: 'MONTHLY' },
+                        //         { label: 'Yearly', value: 'YEARLY' },
+                        //     ],
+                        // },
                     ]}
                 />
             </View>
