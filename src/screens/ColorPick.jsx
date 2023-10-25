@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, SafeAreaView, StyleSheet, View } from "react-native";
 import ColorPicker from "react-native-wheel-color-picker";
+import { useColor } from "../stores/colorContext";
 
 const ColorPick = ({ navigation, route }) => {
-  console.log(route.params);
-  const { page } = route.params;
-  const [color, setColor] = useState("");
+  const [value, setValue] = useState("#000000");
+  const { updateColor } = useColor();
 
   const onColorChange = (color) => {
-    setColor(color);
+    setValue(color);
   };
   return (
     <SafeAreaView className="flex flex-col justify-between h-2/6 items-center mx-5">
       <View className="mt-20 px-6">
         <ColorPicker
-          color={color}
+          color={value}
           onColorChange={(color) => onColorChange(color)}
           thumbSize={30}
           sliderSize={30}
@@ -26,7 +26,10 @@ const ColorPick = ({ navigation, route }) => {
         <Button
           title="Confrim"
           color={"#ffff"}
-          onPress={() => navigation.navigate(page, { color: color })}
+          onPress={() => {
+            updateColor(value);
+            navigation.goBack();
+          }}
         />
       </View>
     </SafeAreaView>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Image, FlatList} from 'react-native';
 // import Modal from "react-native-modal";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useIcon } from '../stores/iconContext';
 
 const dataImage = [{
   name: "Netflix",
@@ -32,6 +33,7 @@ const dataImage = [{
 const numColumns = 4;
 
 const ImagePickerExample = ({navigation, route}) => {
+  const { updateIcon } = useIcon();
   const {page} = route.params;
   // const [modalVisible, setModalVisible] = useState(false);
 
@@ -50,7 +52,9 @@ const ImagePickerExample = ({navigation, route}) => {
         numColumns={numColumns}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={()=> {
-            navigation.navigate(page, {img: item.img})
+            updateIcon(item.img);
+            navigation.goBack();
+            // navigation.navigate(page, {img: item.img})
           }}>
             <View className="flex-row items-center border-[1px] rounded-xl p-3 my-2 mx-2">
               <Image source={{ uri: item.img }} className="w-14 h-14 rounded-full" />

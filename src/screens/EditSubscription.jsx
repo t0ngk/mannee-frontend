@@ -9,11 +9,12 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import FormEditAddSub from "../components/FormEditAddSub";
 import Member from "../components/Member";
 import Selecter from "../components/Selecter";
+import { useColor } from "../stores/colorContext";
 const Data = [
   {
     id: 1,
@@ -37,32 +38,58 @@ const Data = [
   },
 ];
 export default function EditSubscription({ navigation, route }) {
-  console.log(route.params);
-  const { name, price, img, color, firstbill, cycle, daytopay, page } = route.params;
+  console.log("data is ", route.params);
+  const { name, price, img, firstbill, cycle, daytopay, page, color } = route.params;
+  const [newprice, setNewprice] = useState(price || 0);
+  const [newname, setNewname] = useState(name || "");
+  const [newdate, setNewdate] = useState(firstbill || "");
+  const [newcycle, setNewcycle] = useState(cycle || "");
+  const [newcycleFeqy, setNewcycleFeqy] = useState(daytopay || "");
+  const [newimg, setNewimg] = useState(img || "");
+  // const [newcolor, setNewcolor] = useState(color || '');
 
+navigation.setOptions({
+  title: EditSubscription,
+  headerRight: () => (
+    <TouchableOpacity
+      onPress={() => {
+        console.log("newprice", newprice);
+      }}
+    >
+      <View className="px-4 py-2 rounded-xl bg-blue-700">
+        <Text className="font-medium text-white">Save</Text>
+      </View>
+    </TouchableOpacity>
+  ),
+});
   return (
     <>
       <ScrollView className="overflow-auto w-full h-full max-h-[740px">
         <View className="m-[20px]">
           <FormEditAddSub
-            Subprice={price}
-            Subname={name}
+            bindprice={(price) => setNewprice(price)}
+            bindname={(name) => setNewname(name)}
+            binddate={(date) => setNewdate(date)}
+            bindcycle={(cycle) => setNewcycle(cycle)}
+            bindimg={(img) => bindimg(img)}
+            // bindcolor={color => bindcolor(color)}
+            Subprice={newprice}
+            Subname={newname}
             Subcolor={color}
-            Subimg={img}
-            Subdate={firstbill}
-            Subcycle={cycle}
+            Subimg={newimg}
+            Subdate={newdate}
+            Subcycle={newcycle}
             navigation={navigation}
-            page={'EditSubscription'}
+            page={"EditSubscription"}
           />
         </View>
         <View className="mx-[20px] h-[50%]">
-          <Member
-            showheader={'show'}
-            data={Data}
-            type="edit"
-          ></Member>
+          <Member showheader={"show"} data={Data} type="edit"></Member>
         </View>
-        <TouchableOpacity className="items-center my-4" onPress={() => Alert.alert('Delete subscription')}>
+        <TouchableOpacity
+          className="items-center my-4"
+          onPress={() => Alert.alert("Delete subscription")}
+        >
           <View className="px-32 py-3 rounded-xl bg-red-700">
             <Text className="font-medium text-white">Delete Subsription</Text>
           </View>

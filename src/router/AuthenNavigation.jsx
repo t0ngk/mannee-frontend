@@ -61,17 +61,6 @@ export default function AuthNavigation() {
               headerShown: true,
               headerTitle: "Edit Subscription",
               headerBackTitle: " ",
-              headerRight: () => {
-                return (
-                  <TouchableOpacity onPress={({ }) => {
-                    Alert.alert('Edit');
-                  }}>
-                    <View className="mx-4">
-                      <Text className="text-lg font-semibold">Edit</Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              },
             }}
           />
           <Stack.Screen
