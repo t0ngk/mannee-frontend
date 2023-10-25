@@ -46,11 +46,19 @@ export default function FormEditAddSub({
 
   useEffect(() => {
     updateIcon(Subimg);
+    bindimg(Subimg);
+    console.log("icon chang to",Subimg);
   }, [Subimg]);
-
+  
   useEffect(() => {
     updateColor(Subcolor);
+    bindcolor(Subcolor);
   }, [Subcolor]);
+
+  const handleselect = (cycle) => {
+    bindcycle(cycle);
+    console.log(cycle);
+  };
 
   // const [price, setPrice] = useState(Subprice);
   // const [name, setName] = useState(Subname);
@@ -132,7 +140,10 @@ export default function FormEditAddSub({
         </View>
         <View className="border-t-[0.25px] flex flex-row justify-between items-center py-3">
           <Text>Cycle</Text>
-          <Selecter />
+          <View className="flex flex-row items-center">
+            { Subcycle['dayofweek'] != null &&<Text>{Subcycle['dayofweek'] + ' ' + Subcycle['type']}</Text>}
+            <Selecter handleselect={handleselect} />
+          </View>
         </View>
       </View>
     </View>

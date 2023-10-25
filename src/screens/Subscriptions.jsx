@@ -9,40 +9,33 @@ import dayjs from "dayjs";
 import Boxsubscription from "../components/Boxsubscription";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
-
+import { useColor } from "../stores/colorContext";
+import { useSubscription } from "../stores/subscriptionContext";
 
 export default function Subscriptions({ navigation }) {
   const isFocused = useIsFocused();
-  const fetchData = async () => {
-    const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzU2YWFjMzE0MWIxMTNkZmVkYWExZiIsImlhdCI6MTY5ODIwNTI4OX0.M6YwKMRHNLpOqQhoc3dW-nJDroUXniTXrfikFR9r2cs`;
-    const response = await fetch("https://local.t0ng.dev/subscription", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setData(data);
-    }
-  };
-
+  const { color, updateColor } = useColor();
+  const { subscription, fetchSubscription } = useSubscription();
   const [data, setData] = useState([]);
-
   useEffect(() => {
     if (isFocused) {
-      fetchData();
+      fetchSubscription();
     }
   }, [navigation, isFocused]);
 
+  useEffect(() => {
+    console.log(subscription)
+  }, [subscription]);
+
   const costperWeek = () => {
-    const sum = data.reduce((total, item) => total + item.price, 0);
-    return sum.toString();
+    const sum = subscription?.reduce((total, item) => total + item.price, 0);
+    return sum?.toString();
   };
 
   const calculateTotalDatetime = (startDate) => {
     const startdateformat = dayjs().format("YYYY-MM-DD");
     const endDate = dayjs(startDate).add(1, "M").format("YYYY-MM-DD");
-    console.log(startdateformat, endDate);
+    // console.log(startdateformat, endDate);
     const newStartDate = new Date(startdateformat);
     const startTimestamp = newStartDate.getTime();
     const newEndDate = new Date(endDate);
@@ -63,11 +56,14 @@ export default function Subscriptions({ navigation }) {
       </View>
       <FlatList
         className="w-full"
-        data={data}
+        data={subscription}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
+              updateColor(item.color);
+              console.log('Id is', item.id)
               navigation.navigate("DetailSub", {
+                id: item.id,
                 name: item.name,
                 price: item.price,
                 color: item.color,

@@ -11,6 +11,7 @@ import {
 import SearchBar from "../components/SearchBar";
 import Boxsubscription from "../components/Boxsubscription";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useColor } from "../stores/colorContext";
 
 const Data = [
   {
@@ -30,6 +31,7 @@ const Data = [
 ];
 
 export default function CreatingSub({ navigation }) {
+  const {updateColor} = useColor();
   return (
     <View className="flex flex-col justify-between items-center mx-4 my-4 h-[88%]">
       <View className="w-full">
@@ -41,7 +43,8 @@ export default function CreatingSub({ navigation }) {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("EditSubscription", { name: item.name, price: item.price, img: item.img, color: item.color, firstbill: "", cycle: "", daytopay: "" });
+                updateColor(item.color);
+                navigation.navigate("EditSubscription", {id: 'new', name: item.name, price: item.price, img: item.img, firstbill: "", cycle: "", daytopay: "" });
               }}
             >
               <Boxsubscription
@@ -59,7 +62,7 @@ export default function CreatingSub({ navigation }) {
           title="Create Custom Subscription"
           color={"#FFFF"}
           onPress={({ }) => {
-            navigation.navigate("NewSubscription", { page: "NewSubscription", name: "", price: "", img: "", color: "", firstbill: "", cycle: "", daytopay: "" });
+            navigation.navigate("NewSubscription", { page: "NewSubscription", id:"new" , name: "", price: "", img: "", color: "", firstbill: "", cycle: "", daytopay: "" });
           }}
         />
       </View>

@@ -7,6 +7,7 @@ import Subscriptions from "../screens/Subscriptions";
 import DetailSubscription from "../screens/DetailSubscription";
 import BillSummary from "../screens/BillSummary";
 
+
 const Stack = createStackNavigator();
 
 export default function CreatingSubNavigate() {
@@ -48,6 +49,7 @@ export default function CreatingSubNavigate() {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("EditSubscription", {
+                      id: route.params.id,
                       name: route.params.name,
                       price: route.params.price,
                       img: route.params.img,

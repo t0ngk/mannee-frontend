@@ -59,7 +59,6 @@ export default function AuthNavigation() {
             component={EditSubscription}
             options={{
               headerShown: true,
-              headerTitle: "Edit Subscription",
               headerBackTitle: " ",
             }}
           />

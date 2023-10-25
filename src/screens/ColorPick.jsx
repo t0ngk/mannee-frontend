@@ -4,6 +4,7 @@ import ColorPicker from "react-native-wheel-color-picker";
 import { useColor } from "../stores/colorContext";
 
 const ColorPick = ({ navigation, route }) => {
+  const { page } = route.params;
   const [value, setValue] = useState("#000000");
   const { updateColor } = useColor();
 

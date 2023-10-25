@@ -25,7 +25,7 @@ const Data = [
 ];
 export default function DetailSubscription({ navigation, route }) {
   console.log(route.params);
-  const { name, price, img, color, firstbill, cycle, daytopay } = route.params;
+  const { name, price, img, color, firstbill, cycle, daytopay, id } = route.params;
   return (
     <View className="flex flex-col w-full bg-white h-full">
       <ScrollView>
