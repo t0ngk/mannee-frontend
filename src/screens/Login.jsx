@@ -13,7 +13,7 @@ export default function Login({ navigation }) {
       password: value.password,
     }
     console.log(data)
-    const api = await fetch('http://localhost:3000/auth/signin', {
+    const api = await fetch('http://172.20.10.2:3000/auth/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

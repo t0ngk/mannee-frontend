@@ -18,17 +18,31 @@ import EditSubscription from "../screens/EditSubscription";
 import AddFriends from "../screens/AddFriends";
 import BoxRequstFriends from "../screens/BoxRequstFriends";
 import ImagePickerExample from "../components/ImgPicker";
+import Profile from "../screens/Profile";
 import * as SecureStore from 'expo-secure-store';
+import { useEffect, useState } from "react";
 const Stack = createStackNavigator();
 
-export default function AuthNavigation() {
+export default function AuthNavigation({ navigator }) {
+  const [token, setToken] = useState('');
+  useEffect(() => {
+    console.log(isSignedIn())
+    isSignedIn();
+  }, [token]);
 
   const isSignedIn = async () => {
-    const token = await SecureStore.getItemAsync('token');
-    console.log('User Token is : ' + token)
-    return token;
-  };
-
+    const pass = await SecureStore.getItemAsync('token');
+    if (pass != null) {
+      setToken(token);
+      console.log('User Token is : ' + token)
+      return true;
+    }
+    else {
+      setToken('');
+      console.log('User Token is : ' + token)
+      return false;
+    };
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -36,11 +50,11 @@ export default function AuthNavigation() {
           headerShown: false,
         }}
       >
-        {isSignedIn() == null ? (<Stack.Group initialRouteName="Login">
+        {token == '' ? (<Stack.Group initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Registor" component={Registor} />
-        </Stack.Group>) : (
-        <Stack.Screen name="MainNavigation" component={MainNavigation} />)}
+        </Stack.Group>) : null }
+          <Stack.Screen name="MainNavigation" component={MainNavigation} />
         <Stack.Group screenOptions={{ presentation: "modal" }}>
           <Stack.Screen name="CreatingSub" component={CreatingSub} />
           <Stack.Screen
@@ -151,6 +165,15 @@ export default function AuthNavigation() {
             options={{
               headerShown: true,
               headerTitle: "Icon Image",
+              headerBackTitle: " ",
+            }}
+          />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              headerShown: true,
+              headerTitle: "Profile",
               headerBackTitle: " ",
             }}
           />

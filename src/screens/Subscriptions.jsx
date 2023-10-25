@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import { useColor } from "../stores/colorContext";
 import { useSubscription } from "../stores/subscriptionContext";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Subscriptions({ navigation }) {
   const isFocused = useIsFocused();
@@ -63,6 +64,18 @@ export default function Subscriptions({ navigation }) {
   }
 
   const [payday, setPayday] = useState(0);
+
+
+  navigation.setOptions({
+    headerLeft: () => {
+      return (
+        <TouchableOpacity className="mx-5" onPress={() => navigation.navigate('Profile')}>
+            <Ionicons name="ios-person-outline" size={30} color="black" />
+        </TouchableOpacity>
+      )
+    },
+  })
+
   return (
     <View className="flex flex-col items-center mx-4 my-2">
       <View className="border-[0.5px] border-[#CFCFCF] flex flex-col px-4 py-4 w-full my-4 rounded-md justify-start">

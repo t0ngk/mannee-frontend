@@ -41,7 +41,7 @@ export default function BoxRequstFriends({ route }) {
 
     return (
         <View className="mb-2 my-5 p-5 items-center max-h-[750px] mx-14">
-            {!allfriend ?(<Member data={allfriend} memberType="acceptfriend" />)
+            {allfriend != null ?(<Member data={allfriend} memberType="acceptfriend" />)
             :
             <View className="flex flex-col items-center">
                 <AntDesign name="frowno" size={40} color="black" />

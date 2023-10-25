@@ -6,12 +6,67 @@ import { View, Image, Text, TouchableOpacity, Alert } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import * as SecureStore from "expo-secure-store";
 
 export default function MemberStructure({ id, img, name, type, memberType }) {
   const [checked, setChecked] = useState(false);
   const [paid, setPaid] = useState(false);
 
   const togglepaid = () => setPaid(!paid);
+
+  const sendrequestfriend = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/friend/add/${name}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (res.status === 200) {
+      const result = await res.json();
+      Alert.alert('Send Request Success');
+      console.log(result);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
+
+  const acceptfriend = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/friend/accept/TESTT`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (res.status === 200) {
+      const result = await res.json();
+      Alert.alert('Accept Request Success');
+      console.log(result);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
+
+  const deletefriend = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/friend/reject/TESTT`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (res.status === 200) {
+      const result = await res.json();
+      Alert.alert('Delete Request Success');
+      console.log(result);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
   return (
     <View>
       {memberType !== "kill" && <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
@@ -46,7 +101,7 @@ export default function MemberStructure({ id, img, name, type, memberType }) {
         {memberType === "addfirend" && (
           <TouchableOpacity
             className="flex flex-row m-2"
-            onPress={() => alert(`Add this member ${id} `)}
+            onPress={() => sendrequestfriend()}
           >
             <Ionicons name="ios-person-add-outline"
               size={24} color="black" />
@@ -56,13 +111,13 @@ export default function MemberStructure({ id, img, name, type, memberType }) {
           <View className="flex-row items-center">
             <TouchableOpacity
               className="flex flex-row m-2"
-              onPress={() => alert(`Accept this member ${id} `)}
+              onPress={() => acceptfriend()}
             >
               <AntDesign name="check" size={24} color="green" />
             </TouchableOpacity>
             <TouchableOpacity
               className="flex flex-row m-2"
-              onPress={() => alert(`Delete this member ${id} `)}
+              onPress={() => deletefriend()}
             >
               <AntDesign name="close" size={24} color="red" />
             </TouchableOpacity>
@@ -71,7 +126,7 @@ export default function MemberStructure({ id, img, name, type, memberType }) {
         {memberType === "none" && <></>}
       </View>}
       {memberType === "kill" &&
-        <TouchableOpacity onPress={() => {Alert.alert('check member')}}>
+        <TouchableOpacity onPress={() => { Alert.alert('check member') }}>
           <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
             <View className="flex flex-row items-center">
               <Ionicons name="md-person-circle-outline" size={40} color="black" />
