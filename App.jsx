@@ -5,7 +5,7 @@ import AuthNavigation from "./src/router/AuthenNavigation";
 import { ColorContextProvider } from "./src/stores/colorContext";
 import { IconContextProvider } from "./src/stores/iconContext";
 import { SubscriptionContextProvider } from "./src/stores/subscriptionContext";
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 
 
 export default function App() {
