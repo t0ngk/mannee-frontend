@@ -1,10 +1,9 @@
 import { View, Image, Button, Alert, Text } from "react-native";
 import Input from "../components/Input";
 import { Formik } from "formik";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 import * as Yup from "yup";
 import { useUser } from "../stores/userContext";
-
 
 export default function Login({ navigation }) {
   const { updateUser } = useUser();
@@ -13,24 +12,24 @@ export default function Login({ navigation }) {
     const data = {
       username: value.username,
       password: value.password,
-    }
-    console.log(data)
-    const api = await fetch('http://localhost:3000/auth/signin', {
-      method: 'POST',
+    };
+    console.log(data);
+    const api = await fetch("http://localhost:3000/auth/signin", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    console.log(api)
+    console.log(api);
     if (api.ok) {
       const res = await api.json();
       Alert.alert("Login Success");
-      SecureStore.setItemAsync('token', res.token);
-      const user = await fetch('http://localhost:3000/auth/me', {
-        method: 'GET',
+      SecureStore.setItemAsync("token", res.token);
+      const user = await fetch("http://localhost:3000/auth/me", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${res.token}`,
         },
       });
@@ -40,31 +39,46 @@ export default function Login({ navigation }) {
       } else {
         const err = await user.json();
         Alert.alert("Error : " + err.error);
-        console.log(err)
+        console.log(err);
       }
-      navigation.navigate("MainNavigation")
-      console.log(res)
+      navigation.navigate("MainNavigation");
+      console.log(res);
     } else {
       const err = await api.json();
       Alert.alert("Error : " + err.error);
-      console.log(err)
+      console.log(err);
     }
-    const token = await SecureStore.getItemAsync('token');
-    console.log(token)
-  }
+    const token = await SecureStore.getItemAsync("token");
+    console.log(token);
+  };
 
   const LoginSchema = Yup.object().shape({
-    username: Yup.string().min(4, "Too Short!").max(100, "Too Long!").required("Required"),
-    password: Yup.string().min(6, "Too Short!").max(100, "Too Long!").required("Required"),
+    username: Yup.string()
+      .min(4, "Too Short!")
+      .max(100, "Too Long!")
+      .required("Required"),
+    password: Yup.string()
+      .min(6, "Too Short!")
+      .max(100, "Too Long!")
+      .required("Required"),
   });
-
 
   return (
     <Formik
       validationSchema={LoginSchema}
-      initialValues={{ username: '', password: '' }}
-      onSubmit={async (values) => { await login(values) }}>
-      {({ handleChange, handleSubmit, values, handleBlur, errors, touched }) => (
+      initialValues={{ username: "", password: "" }}
+      onSubmit={async (values) => {
+        await login(values);
+      }}
+    >
+      {({
+        handleChange,
+        handleSubmit,
+        values,
+        handleBlur,
+        errors,
+        touched,
+      }) => (
         <View className="flex flex-col items-center justify-center content-center my-auto py-52">
           <View className="mb-5">
             <Image
@@ -79,8 +93,8 @@ export default function Login({ navigation }) {
                 placeholder="Your Username"
                 error={errors.username}
                 touched={touched.username}
-                onChangeText={handleChange('username')}
-                onBlur={handleBlur('username')}
+                onChangeText={handleChange("username")}
+                onBlur={handleBlur("username")}
                 value={values.username}
               />
               {errors.username && touched.username ? (
@@ -93,15 +107,14 @@ export default function Login({ navigation }) {
                 icon="lock"
                 error={errors.password}
                 touched={touched.password}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
                 value={values.password}
                 secureTextEntry={true}
               />
               {errors.password && touched.password ? (
                 <Text className="text-red-500 pt-1">{errors.password}</Text>
-              ) : null
-              }
+              ) : null}
             </View>
           </View>
           <View className="border-2 w-80 rounded-md bg-black mt-3">
