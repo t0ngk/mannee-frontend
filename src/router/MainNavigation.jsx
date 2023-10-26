@@ -45,10 +45,7 @@ export default function MainNavigation() {
         name="Bills"
         component={Bill}
         options={({ navigation, props }) => ({
-          headerLeft: () => <Button title="Setting" />,
-          headerRight: () => (
-            <Button title="+" onPress={() => navigation.navigate("BillAdd")} />
-          ),
+          headerLeft: () => <></>,
           tabBarIcon: () => {
             return <MaterialCommunityIcons name="clipboard-check-outline" size={24} color="black" />;
           }

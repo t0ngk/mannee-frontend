@@ -2,37 +2,64 @@ import { Image, View, Text, Button, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DataBox from "../components/DataBox";
 import CreatingSubNavigate from "../router/CreatingSubNavigate";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as SecureStore from 'expo-secure-store';
 import { useIsFocused } from "@react-navigation/core";
-import { el } from "date-fns/locale";
 
-const Data = [
-  
-];
 
 export default function Bill({ route, navigation }) {
   const isFocused = useIsFocused();
+  const [bills, setbills] = useState([]);
+
 
   useEffect(() => {
     if (isFocused) {
-      console.log('Bill is focused')
+      getBill();
+      console.log('Bill is focused', bills)
     }
-    else{
+    else {
       console.log('Bill is not focused')
     }
-  }, [navigation, isFocused]);
+  }, [isFocused]);
+
+  navigation.setOptions({
+    headerRight: () => (
+      <TouchableOpacity className="mx-5" onPress={() => navigation.navigate("BillAdd")}>
+        <Text className="text-2xl">+</Text>
+      </TouchableOpacity>
+    ),
+  })
+
+  const getBill = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/bill`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setbills(data);
+      console.log(data);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
+
 
   return (
     <View className="my-2 m-[20px] h-full">
       <ScrollView className="w-full">
-        <FlatList
-          data={Data}
+        {bills && <FlatList
+          data={bills}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("BillSummary", {
-                  id: item.id,
+                  data: item,
                 });
               }}
             >
@@ -40,12 +67,18 @@ export default function Bill({ route, navigation }) {
                 id={item.id}
                 name={item.name}
                 price={item.price}
-                amount_of_member={item.amount_of_member}
+                amount_of_member={item.member}
                 page="member"
               ></DataBox>
             </TouchableOpacity>
           )}
-        />
+        />}
+        {
+          bills == [] &&
+          <View className="flex flex-col items-center justify-center h-full">
+            <Text className="text-2xl">No Bill</Text>
+          </View>
+        }
       </ScrollView>
     </View>
   );

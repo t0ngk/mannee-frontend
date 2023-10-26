@@ -79,14 +79,6 @@ export default function CreatingSubNavigate() {
       <Stack.Screen
         name="BillSummary"
         component={BillSummary}
-        options={({ navigation, props }) => ({
-          headerRight: () => (
-            <Button
-              title="Edit"
-              onPress={() => navigation.navigate("BillEdit")}
-            />
-          ),
-        })}
       />
     </Stack.Navigator>
   );

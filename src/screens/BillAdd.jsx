@@ -7,41 +7,51 @@ import {
   FlatList,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { useColor } from "../stores/colorContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as SecureStore from "expo-secure-store";
 
-const Data = [
-  {
-    id: 1,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 2,
-    name: "User2",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 3,
-    name: "User3",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 4,
-    name: "User4",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-];
-
+const Data = []
 export default function BillAdd({ navigation, route }) {
-  const [color, setColor] = useState(false);
+  const { color, setColor } = useColor();
   const [name, setName] = useState("");
-  useEffect(() => {
-    const routeColor = route.params ? route.params.color : "";
-    if (routeColor) {
-      setColor(routeColor);
-    }
-  }, [route.params]);
+
+
+const postbill = async () => {
+  const token = await SecureStore.getItemAsync("token");
+  const res = await fetch(`http://172.20.10.2:3000/bill/new`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name: name,
+      color: color,
+    }),
+  });
+  if (res.ok) {
+    const data = await res.json();
+    console.log(data);
+    Alert.alert("Create Bill Success");
+    navigation.goBack();
+  } else {
+    const err = await res.json();
+    console.log(err);
+  } 
+}
+
+  navigation.setOptions({
+    headerRight: () => (
+      <TouchableOpacity className="mx-5" onPress={() => postbill()}>
+        <Text className="text-xl font-semibold">Add</Text>
+      </TouchableOpacity>
+    ),
+  });
+
   return (
     <>
       <View className="my-2 m-[20px] h-full">
@@ -58,13 +68,12 @@ export default function BillAdd({ navigation, route }) {
           <View className="border-t-[0.25px] flex flex-row justify-between items-center py-1">
             <View className="flex flex-row items-center">
               <Text className="font-semibold">Color</Text>
+            </View>
+            <View className="flex flex-row items-center">
               <View
                 className="mx-2 w-6 h-6 rounded-full"
                 style={{ backgroundColor: color }}
               ></View>
-            </View>
-            <View className="flex flex-row items-center">
-              <Text>{color ? color : "Pick Color"}</Text>
               <Button
                 title=">"
                 onPress={() =>

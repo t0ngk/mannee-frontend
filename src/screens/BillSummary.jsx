@@ -3,6 +3,10 @@ import Member from "../components/Member";
 import MainNavigation from "../router/MainNavigation";
 import DataBox from "../components/DataBox";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import * as SecureStore from 'expo-secure-store';
+
 const MemberData = [
   {
     id: 1,
@@ -16,13 +20,6 @@ const MemberData = [
     img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
     name: "user 02",
     price: 129,
-    amount_of_member: 3,
-  },
-  {
-    id: 3,
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-    name: "food 03",
-    price: 159,
     amount_of_member: 3,
   },
   {
@@ -65,7 +62,50 @@ const FoodData = [
   },
 ];
 export default function BillSummary({ route, navigation }) {
-  const { id } = route.params;
+  console.log("data is ", route.params.data);
+  const { data } = route.params;
+  const [bill, setBill] = useState(data);
+  const isFocused = useIsFocused();
+
+  const billbyid = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/bill/${data['id']}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setBill(data);
+      console.log(data);
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      billbyid();
+      console.log('BillSummary is focused')
+    }
+    else {
+      console.log('BillSummary is not focused')
+    }
+  }, [isFocused]);
+
+  navigation.setOptions({
+    title: data['name'],
+    headerRight: () => (
+      <Button
+        title="Edit"
+        onPress={() => navigation.navigate("BillEdit", { id: data['id'] })}
+      />
+    ),
+    headerBackTitle: " ",
+  });
 
   return (
     <View className="overflow-auto">
@@ -78,7 +118,7 @@ export default function BillSummary({ route, navigation }) {
               </Text>
               <Text
                 className="text-[30px] pb-1  ml-28 mr-2 "
-                onPress={() => navigation.navigate("FoodAdd")}
+                onPress={() => navigation.navigate("FoodAdd", { id: data['id'] })}
               >
                 +
               </Text>
@@ -87,10 +127,10 @@ export default function BillSummary({ route, navigation }) {
             <FlatList
               className=" max-h-[200px]"
               keyExtractor={(item) => item.id.toString()}
-              data={FoodData}
+              data={data['items']}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("FoodEdit")}
+                  onPress={() => navigation.navigate("FoodEdit", { id: data['id'] })}
                 >
                   <DataBox
                     id={item.id}

@@ -11,9 +11,9 @@ export default function DataBox({ id, name, price, amount_of_member, page }) {
         <Text className="font-medium">{name}</Text>
       </View>
       <View className=" items-end">
-        <Text>฿{price}</Text>
+        <Text>฿{price ? price : 0}</Text>
         <Text className="text-[12px] text-gray-600">
-          {amount_of_member} Members
+          {amount_of_member ? amount_of_member : 0} Members
         </Text>
       </View>
     </View>
