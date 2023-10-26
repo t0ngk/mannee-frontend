@@ -38,7 +38,7 @@ export default function CreatingSub({ navigation }) {
   return (
     <View className="flex flex-col justify-between items-center mx-4 my-4 h-[88%]">
       <View className="w-full">
-        <SearchBar />
+        {/* <SearchBar /> */}
       </View>
       <ScrollView className="w-full">
         {/* <FlatList

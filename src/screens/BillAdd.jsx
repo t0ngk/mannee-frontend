@@ -20,7 +20,7 @@ const Data = []
 export default function BillAdd({ navigation, route }) {
   const { color, setColor } = useColor();
   const [name, setName] = useState("");
-  const { members, setMember } = useMember();
+  const { members, updateMember } = useMember();
   const { user } = useUser();
 
   const simplyfyMember = (member) => {
@@ -32,7 +32,7 @@ export default function BillAdd({ navigation, route }) {
 
 const postbill = async () => {
   const token = await SecureStore.getItemAsync("token");
-  const res = await fetch(`http://172.20.10.2:3000/bill/new`, {
+  const res = await fetch(`http://localhost:3000/bill/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const postbill = async () => {
     body: JSON.stringify({
       name: name,
       color: color,
-      members: simplyfyMember(members),
+      member: simplyfyMember(members),
     }),
   });
   if (res.ok) {
@@ -99,7 +99,6 @@ const postbill = async () => {
             data={members}
             stage="add"
             type="edit"
-            memberType="delete"
           ></Member>
         </View>
       </View>

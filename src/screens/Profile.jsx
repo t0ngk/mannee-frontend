@@ -1,11 +1,14 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SecureStore from "expo-secure-store";
+import { useUser } from '../stores/userContext';
 export default function Profile({ navigation }) {
 
     const logout = async () => {
         const token = await SecureStore.deleteItemAsync("token");
     }
+
+    const { user } = useUser();
 
     navigation.setOptions({
         headerRight: () => (
@@ -29,8 +32,13 @@ export default function Profile({ navigation }) {
         ),
     })
     return (
-        <View className="h-full">
-            <Text>Profile</Text>
+        <View className="flex-1 flex justify-center items-center">
+            <Image
+            className="rounded border-2 border-gray-400"
+                source={{ uri: `https://github.com/identicons/${user.username}.png` }}
+                style={{ width: 300, height: 300, borderRadius: 200 }}
+            />
+            <Text className="text-4xl">{user.username}</Text>
         </View>
     )
 }

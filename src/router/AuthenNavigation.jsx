@@ -110,7 +110,6 @@ export default function AuthNavigation({ navigator }) {
               headerShown: true,
               headerTitle: "Add Member",
               headerBackTitle: " ",
-              headerRight: () => <Button title="Add" />,
             }}
           />
           <Stack.Screen
@@ -127,7 +126,6 @@ export default function AuthNavigation({ navigator }) {
             component={FoodEdit}
             options={{
               headerShown: true,
-              headerTitle: "Edit Food",
               headerBackTitle: " ",
             }}
           />

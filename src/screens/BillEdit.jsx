@@ -16,13 +16,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useMember } from "../stores/memberContext";
+import { useUser } from "../stores/userContext";
 
 
 export default function BillAdd({ navigation, route }) {
-  const { id } = route.params;
+  const { id, data } = route.params;
   const { color, updateColor } = useColor();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(data.name);
   const { members, updateMember } = useMember();
+  const {user} = useUser();
   navigation.setOptions({
     headerRight: () => (
       <TouchableOpacity className="mx-5" onPress={() => editBill()}>
@@ -31,9 +33,20 @@ export default function BillAdd({ navigation, route }) {
     ),
   });
 
+  useEffect(() => {
+    updateColor(data.color);
+  }, []);
+
+  const simplyfyMember = (member) => {
+    const newMember = member.map((item) => {
+      return item.id;
+    });
+    return newMember.filter((item) => item != user.id);
+  };
+
   const deleteBill = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill/${id}`, {
+    const res = await fetch(`http://localhost:3000/bill/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +66,7 @@ export default function BillAdd({ navigation, route }) {
 
   const editBill = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill/${id}`, {
+    const res = await fetch(`http://localhost:3000/bill/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +74,8 @@ export default function BillAdd({ navigation, route }) {
       },
       body: JSON.stringify({
         name: name,
-        color: color
+        color: color,
+        member: simplyfyMember(members),
       })
     });
     if (res.ok) {
@@ -111,7 +125,6 @@ export default function BillAdd({ navigation, route }) {
             data={members}
             stage="edit"
             type="edit"
-            memberType="delete"
           ></Member>
         </View>
         <View className=" w-full my-[60px] ">

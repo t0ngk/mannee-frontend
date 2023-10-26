@@ -82,7 +82,7 @@ export default function MemberStructure({
   };
   return (
     <View>
-      {mode !== "kill" && mode !== "unkill" && (
+      {(mode !== "kill" && mode !== "unkill" && mode !== "paid" && mode !== "unpaid") && (
         <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
           <View className="flex flex-row items-center">
             {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
@@ -220,6 +220,82 @@ export default function MemberStructure({
             </View>
             <View className="justify-center">
               <MaterialIcons name="attach-money" size={24} color="green" />
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+      {mode === "paid" && (
+        <TouchableOpacity
+          disabled={disable}
+          onPress={async () => {
+            const token = await SecureStore.getItemAsync("token");
+            const res = await fetch(
+              `http://localhost:3000/bill/${target}/paid/${id}`,
+              {
+                method: "PUT",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (res.ok) {
+              setMode("unpaid");
+            } else {
+              const err = await res.json();
+              console.log(err);
+            }
+          }}
+        >
+          <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
+            <View className="flex flex-row items-center">
+              <Image
+                source={{
+                  uri: `https://github.com/identicons/${name}.png`,
+                }}
+                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+              />
+              <Text className="p-3">{name}</Text>
+            </View>
+            <View className="justify-center">
+              <MaterialIcons name="attach-money" size={24} color="green" />
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+      {mode === "unpaid" && (
+        <TouchableOpacity
+          disabled={disable}
+          onPress={async () => {
+            const token = await SecureStore.getItemAsync("token");
+            const res = await fetch(
+              `http://localhost:3000/bill/${target}/paid/${id}`,
+              {
+                method: "PUT",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (res.ok) {
+              setMode("paid");
+            } else {
+              const err = await res.json();
+              console.log(err);
+            }
+          }}
+        >
+          <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
+            <View className="flex flex-row items-center">
+              <Image
+                source={{
+                  uri: `https://github.com/identicons/${name}.png`,
+                }}
+                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+              />
+              <Text className="p-3">{name}</Text>
+            </View>
+            <View className="justify-center">
+              <MaterialIcons name="attach-money" size={24} color="red" />
             </View>
           </View>
         </TouchableOpacity>

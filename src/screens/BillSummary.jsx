@@ -5,20 +5,22 @@ import DataBox from "../components/DataBox";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 import { useMember } from "../stores/memberContext";
-
+import { useUser } from "../stores/userContext";
+import MemberStructure from "../components/MemberStructure";
 
 export default function BillSummary({ route, navigation }) {
   console.log("data is ", route.params.data);
   const { data } = route.params;
   const [bill, setBill] = useState(data);
   const isFocused = useIsFocused();
-  const {members, updateMember} = useMember();
+  const { members, updateMember } = useMember();
+  const { user } = useUser();
 
   const billbyid = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill/${data['id']}`, {
+    const res = await fetch(`http://localhost:3000/bill/${data["id"]}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -28,33 +30,41 @@ export default function BillSummary({ route, navigation }) {
     if (res.ok) {
       const data = await res.json();
       setBill(data);
+      console.log("=============================")
       console.log(data);
     } else {
       const err = await res.json();
       console.log(err);
     }
-  }
+  };
+
+  const filterWhoIn = (item) => {
+    const people = item.peopleId;
+    return bill.user.filter((item) => people.includes(item.id));
+  };
 
   useEffect(() => {
     if (isFocused) {
       billbyid();
-      console.log('BillSummary is focused')
-    }
-    else {
-      console.log('BillSummary is not focused')
+      console.log("BillSummary is focused");
+    } else {
+      billbyid();
+      console.log("BillSummary is not focused");
     }
   }, [isFocused, navigation]);
 
   navigation.setOptions({
-    title: data['name'],
-    headerRight: () => (
-      <Button
-        title="Edit"
-        onPress={() => {
-          updateMember(data.user)
-          navigation.navigate("BillEdit", { id: data['id'] })}}
-      />
-    ),
+    title: data["name"],
+    headerRight: () =>
+      user.id == bill.ownerId && (
+        <Button
+          title="Edit"
+          onPress={() => {
+            updateMember(bill.user);
+            navigation.navigate("BillEdit", { id: data["id"], data: bill });
+          }}
+        />
+      ),
     headerBackTitle: " ",
   });
 
@@ -70,49 +80,102 @@ export default function BillSummary({ route, navigation }) {
               <Text
                 className="text-[30px] pb-1  ml-28 mr-2 "
                 onPress={() => {
-                  console.log("++++++++++++++++++++++++++++++++++++++++++++++")
-                  console.log(data)
-                  updateMember(data.user)
-                  navigation.navigate("FoodAdd", { id: data['id'] })}}
+                  updateMember(bill.user);
+                  navigation.navigate("FoodEdit", {
+                    itemid: {
+                      id: "new",
+                      billId: data.id,
+                    },
+                    price: 0,
+                    group: bill.user,
+                    name: "New Item",
+                  });
+                }}
               >
                 +
               </Text>
             </View>
             <View className="border-t-2 border-[#CFCFCF]"></View>
-            <FlatList
+            {bill.items.map((item) => (
+              <TouchableOpacity
+                onPress={() => {
+                  updateMember(filterWhoIn(item));
+                  navigation.navigate("FoodEdit", {
+                    itemid: item,
+                    group: bill.user,
+                    name: item.name,
+                    price: item.price,
+                  });
+                }}
+              >
+                <DataBox
+                  id={item.id}
+                  name={item.name}
+                  price={item.price}
+                  amount_of_member={item.peopleId.length}
+                  page="food"
+                ></DataBox>
+              </TouchableOpacity>
+            ))}
+            {/* <FlatList
               className=" max-h-[200px]"
               keyExtractor={(item) => item.id.toString()}
-              data={data['items']}
+              data={data["items"]}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   onPress={() => {
-                    updateMember(data.user)
-                    navigation.navigate("FoodEdit", { itemid: item })}}
+                    updateMember(filterWhoIn(item));
+                    navigation.navigate("FoodEdit", {
+                      itemid: item,
+                      group: bill.user,
+                      name: item.name,
+                      price: item.price,
+                    });
+                  }}
                 >
                   <DataBox
                     id={item.id}
                     name={item.name}
                     price={item.price}
-                    amount_of_member={item.amount_of_member}
+                    amount_of_member={item.peopleId.length}
                     page="food"
                   ></DataBox>
                 </TouchableOpacity>
               )}
-            />
+            /> */}
           </ScrollView>
         </View>
         <View className=" max-h-[250px] h-[250px]  mx-[20px]">
-          <Member data={bill.user}></Member>
+          {/* <Member data={bill.user} memberType={"paid"}></Member> */}
+          {bill?.user?.map((item) => (
+            <MemberStructure
+              key={item.id}
+              id={item.id}
+              name={item.username}
+              target={data.id}
+              memberType={bill?.paidedId?.includes(item.id) ? "paid" : "unpaid"}
+            />
+          ))}
         </View>
         <View className=" w-full mt-28 ">
           <View className="flex flex-row  border m-5 p-4 rounded-md justify-between">
             <Text className=" text-[16px]">Total</Text>
-            <Text className=" text-[16px]">1987 ฿</Text>
+            <Text className=" text-[16px]">
+              {bill.items.reduce((a, b) => a + b.price, 0)} ฿
+            </Text>
           </View>
 
           <View className="flex flex-row border mx-5 p-4 mb-5 justify-between rounded-md bg-black">
             <Text className="text-white text-[16px]">You need to pay</Text>
-            <Text className="text-white text-[16px]">150 ฿</Text>
+            <Text className="text-white text-[16px]">
+              {bill.items.reduce((a, b) => {
+                if (b.peopleId.includes(user.id)) {
+                  return a + b.price / b.peopleId.length;
+                }
+                return a;
+              }, 0)}{" "}
+              ฿
+            </Text>
           </View>
         </View>
       </ScrollView>

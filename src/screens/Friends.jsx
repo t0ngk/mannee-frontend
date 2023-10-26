@@ -88,12 +88,12 @@ export default function Friends({ navigation }) {
   return (
     <ScrollView className="overflow-auto w-full h-full px-4 py-4">
       <View>
-        <SearchBar />
+        {/* <SearchBar /> */}
       </View >
       {allfriend ? (<View>
         <Member
           data={allfriend}
-          memberType={'delete'}
+          // memberType={'delete'}
         />
       </View>) 
       : 

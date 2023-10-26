@@ -13,13 +13,13 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 export default function AddMember({ navigation, route }) {
-  const { member } = route.params;
+  const { member, group } = route.params;
   const [friend, setFriend] = useState([]);
   const isFocused = useIsFocused();
 
   const fetchFriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/friend`, {
+    const res = await fetch(`http://localhost:3000/friend`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -42,13 +42,17 @@ export default function AddMember({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
+      if (group) {
+        setFriend(group)
+        return
+      }
       console.log("Ready to fetch")
       fetchFriend()
     }
   }, [isFocused]);
   return (
     <View className="my-2  m-[20px] h-full">
-      <SearchBar />
+      {/* <SearchBar /> */}
       <ScrollView className="w-full">
         {friend.map((item) => (
           <MemberStructure

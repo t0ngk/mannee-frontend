@@ -4,7 +4,7 @@ import { View, Text, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import MemberStructure from "./MemberStructure";
-export default function Member({ data, stage, type, memberType, showheader, disable, target }) {
+export default function Member({ data, stage, type, memberType, showheader, disable, target, group }) {
   const navigation = useNavigation();
   return (
     <View className="h-full">
@@ -16,7 +16,7 @@ export default function Member({ data, stage, type, memberType, showheader, disa
           <View className="items-end">
             {type === "edit" && (
               <Text
-                onPress={() => navigation.navigate("AddMember", {member: data})}
+                onPress={() => navigation.navigate("AddMember", {member: data, group: group})}
                 className="text-[29px] pb-2 "
               >
                 +
