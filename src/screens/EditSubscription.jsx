@@ -43,8 +43,19 @@ const Data = [
 
 export default function EditSubscription({ navigation, route }) {
   console.log("data is ", route.params);
-  const { name, price, img, firstbill, cycle, cycleFreq , daytopay, page, id } =
-    route.params;
+  const {
+    name,
+    price,
+    img,
+    firstbill,
+    cycle,
+    cycleFreq,
+    daytopay,
+    page,
+    id,
+    member,
+  } = route.params;
+  console.log("member is ", member);
   const [newprice, setNewprice] = useState(price || 0);
   const [newname, setNewname] = useState(name || "");
   const [newdate, setNewdate] = useState(firstbill || "");
@@ -54,11 +65,11 @@ export default function EditSubscription({ navigation, route }) {
   const [newcolor, setNewcolor] = useState(color || "");
   const { icon, updateIcon } = useIcon();
   const { color, updateColor } = useColor();
-  
-  console.log("newcycle is ", newcycleFeqy)
+
+  console.log("newcycle is ", newcycleFeqy);
 
   const editSubscription = async () => {
-    console.log(firstbill)
+    console.log(firstbill);
     const token = await SecureStore.getItemAsync("token");
     const Data = {
       icon: icon,
@@ -76,12 +87,12 @@ export default function EditSubscription({ navigation, route }) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(Data),
     });
     if (response.ok) {
-      console.log("Pasing json")
+      console.log("Pasing json");
       const data = await response.json();
       console.log(data);
       Alert.alert("Create Subscription Success");
@@ -197,11 +208,11 @@ export default function EditSubscription({ navigation, route }) {
           />
         </View>
         <View className="mx-[20px] h-[50%]">
-          <Member showheader={"show"} data={Data} type="edit"></Member>
+          <Member showheader={"show"} data={member} type="edit"></Member>
         </View>
         <TouchableOpacity
           className="items-center my-4"
-          onPress={() => (deteleSubscription())}
+          onPress={() => deteleSubscription()}
         >
           <View className="px-32 py-3 rounded-xl bg-red-700">
             <Text className="font-medium text-white">Delete Subsription</Text>

@@ -1,7 +1,7 @@
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Image, Text, TouchableOpacity, Alert } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,12 +12,14 @@ export default function MemberStructure({
   id,
   img,
   name,
-  type,
   memberType,
+  target,
   disable,
+  action
 }) {
   const [checked, setChecked] = useState(false);
   const [paid, setPaid] = useState(false);
+  const [mode, setMode] = useState(memberType);
 
   const togglepaid = () => setPaid(!paid);
 
@@ -76,91 +78,99 @@ export default function MemberStructure({
   };
   return (
     <View>
-      {memberType !== "kill" ||
-        (memberType !== "unkill" && (
-          <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
-            <View className="flex flex-row items-center">
-              {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
-              <Image
+      {mode !== "kill" && mode !== "unkill" && (
+        <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
+          <View className="flex flex-row items-center">
+            {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
+            <Image
                 source={{
-                  uri: img,
+                  uri: `https://github.com/identicons/${name}.png`,
                 }}
                 style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
               />
-              <Text className="p-3">{name}</Text>
-            </View>
-            {memberType === "add" && (
-              <View className="border rounded-md border-[#CFCFCF]">
-                <Checkbox
-                  color="#808080"
-                  status={checked ? "checked" : "unchecked"}
-                  onPress={() => {
-                    setChecked(!checked);
-                    console.log(checked);
-                  }}
-                />
-              </View>
-            )}
-            {memberType === "delete" && (
-              <TouchableOpacity
-                className="flex flex-row m-2"
-                onPress={() => alert(`delete member ${id} `)}
-                disabled={disable}
-              >
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-                  color="red"
-                  size={20}
-                ></FontAwesomeIcon>
-              </TouchableOpacity>
-            )}
-            {memberType === "addfirend" && (
-              <TouchableOpacity
-                className="flex flex-row m-2"
-                onPress={() => sendrequestfriend()}
-                disabled={disable}
-              >
-                <Ionicons
-                  name="ios-person-add-outline"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-            )}
-            {memberType === "acceptfriend" && (
-              <View className="flex-row items-center">
-                <TouchableOpacity
-                  className="flex flex-row m-2"
-                  onPress={() => acceptfriend()}
-                  disabled={disable}
-                >
-                  <AntDesign name="check" size={24} color="green" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="flex flex-row m-2"
-                  onPress={() => deletefriend()}
-                  disabled={disable}
-                >
-                  <AntDesign name="close" size={24} color="red" />
-                </TouchableOpacity>
-              </View>
-            )}
-            {memberType === "none" && <></>}
+            <Text className="p-3">{name}</Text>
           </View>
-        ))}
-      {memberType === "kill" && (
+          {mode === "add" && (
+            <View className="border rounded-md border-[#CFCFCF]">
+              <Checkbox
+                color="#808080"
+                status={checked ? "checked" : "unchecked"}
+                onPress={() => {
+                  setChecked(!checked);
+                  console.log(checked);
+                }}
+              />
+            </View>
+          )}
+          {mode === "delete" && (
+            <TouchableOpacity
+              className="flex flex-row m-2"
+              onPress={() => alert(`delete member ${id} `)}
+              disabled={disable}
+            >
+              <FontAwesomeIcon
+                icon={faTrashAlt}
+                color="red"
+                size={20}
+              ></FontAwesomeIcon>
+            </TouchableOpacity>
+          )}
+          {mode === "addfirend" && (
+            <TouchableOpacity
+              className="flex flex-row m-2"
+              onPress={() => sendrequestfriend()}
+              disabled={disable}
+            >
+              <Ionicons name="ios-person-add-outline" size={24} color="black" />
+            </TouchableOpacity>
+          )}
+          {mode === "acceptfriend" && (
+            <View className="flex-row items-center">
+              <TouchableOpacity
+                className="flex flex-row m-2"
+                onPress={() => acceptfriend()}
+                disabled={disable}
+              >
+                <AntDesign name="check" size={24} color="green" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="flex flex-row m-2"
+                onPress={() => deletefriend()}
+                disabled={disable}
+              >
+                <AntDesign name="close" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
+          )}
+          {mode === "none" && <></>}
+        </View>
+      )}
+      {mode === "kill" && (
         <TouchableOpacity
           disabled={disable}
-          onPress={() => {
-            Alert.alert("check member");
+          onPress={async () => {
+            const token = await SecureStore.getItemAsync("token");
+            const res = await fetch(
+              `http://localhost:3000/subscription/${target}/paid/${id}`,
+              {
+                method: "PUT",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (res.ok) {
+              setMode("unkill");
+            }
           }}
         >
           <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
             <View className="flex flex-row items-center">
-              <Ionicons
-                name="md-person-circle-outline"
-                size={40}
-                color="black"
+              <Image
+                source={{
+                  uri: `https://github.com/identicons/${name}.png`,
+                }}
+                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
               />
               <Text className="p-3">{name}</Text>
             </View>
@@ -170,11 +180,23 @@ export default function MemberStructure({
           </View>
         </TouchableOpacity>
       )}
-      {memberType === "unkill" && (
+      {mode === "unkill" && (
         <TouchableOpacity
           disabled={disable}
-          onPress={() => {
-            Alert.alert("check member");
+          onPress={async () => {
+            const token = await SecureStore.getItemAsync("token");
+            const res = await fetch(
+              `http://localhost:3000/subscription/${target}/paid/${id}`,
+              {
+                method: "PUT",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            if (res.ok) {
+              setMode("kill");
+            }
           }}
         >
           <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">

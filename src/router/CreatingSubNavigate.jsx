@@ -63,6 +63,7 @@ export default function CreatingSubNavigate() {
                       cycleFreq: route.params.cycleFreq,
                       cycle: route.params.cycle,
                       daytopay: route.params.daytopay,
+                      member: route.params.member,
                       page: "EditSubscription",
                     });
                   }}

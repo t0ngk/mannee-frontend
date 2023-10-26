@@ -2,33 +2,13 @@ import { Text, View, Image, ScrollView } from "react-native";
 import Member from "../components/Member";
 import dayjs from "dayjs";
 import { useUser } from "../stores/userContext";
-const Data = [
-  {
-    id: 1,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 2,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 3,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 4,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-];
+import MemberStructure from "../components/MemberStructure";
 export default function DetailSubscription({ navigation, route }) {
   const { user } = useUser();
-  const { member } = route.params;
+  const { member, id, paidId } = route.params;
 
   console.log("member is ", member);
+  console.log("paidId is", paidId);
 
   function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
     const registration = dayjs(registrationDate);
@@ -44,7 +24,6 @@ export default function DetailSubscription({ navigation, route }) {
     }
   }
 
-  console.log(route.params);
   const { price, img, firstbill, cycleFreq, ownerId } = route.params;
   const nextbill = calculateMembershipDueDate(firstbill, cycleFreq);
   const diff = dayjs(nextbill).diff(dayjs(), "day");
@@ -67,12 +46,15 @@ export default function DetailSubscription({ navigation, route }) {
           <Text className="text-4xl">Days</Text>
         </View>
         <View className=" max-h-[300px] h-[290px]  mx-[20px]">
-          <Member
-            data={member}
-            showheader={"show"}
-            memberType={"unkill"}
-            disable={user.id === ownerId ? false : true}
-          ></Member>
+          {member?.map((item) => (
+            <MemberStructure
+              key={item.id}
+              id={item.id}
+              name={item.username}
+              target={id}
+              memberType={paidId.includes(item.id) ? "unkill" : "kill"}
+            />
+          ))}
         </View>
       </ScrollView>
     </View>

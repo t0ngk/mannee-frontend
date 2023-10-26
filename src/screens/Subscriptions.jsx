@@ -74,7 +74,6 @@ export default function Subscriptions({ navigation }) {
           <TouchableOpacity
             onPress={() => {
               updateColor(item.color);
-              console.log('Id is', item.id)
               navigation.navigate("DetailSub", {
                 id: item.id,
                 name: item.name,
@@ -86,7 +85,7 @@ export default function Subscriptions({ navigation }) {
                 firstbill: item.firstBill,
                 ownerId: item.ownerId,
                 member: item.user,
-                paidId: item.paidId,
+                paidId: item.paidedId,
               });
             }}
           >
