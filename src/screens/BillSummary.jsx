@@ -94,7 +94,7 @@ export default function BillSummary({ route, navigation }) {
     else {
       console.log('BillSummary is not focused')
     }
-  }, [isFocused]);
+  }, [isFocused, navigation]);
 
   navigation.setOptions({
     title: data['name'],
@@ -130,7 +130,7 @@ export default function BillSummary({ route, navigation }) {
               data={data['items']}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("FoodEdit", { id: data['id'] })}
+                  onPress={() => navigation.navigate("FoodEdit", { itemid: item })}
                 >
                   <DataBox
                     id={item.id}

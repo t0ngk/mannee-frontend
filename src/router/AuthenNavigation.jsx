@@ -101,7 +101,6 @@ export default function AuthNavigation({ navigator }) {
               headerShown: true,
               headerTitle: "Edit Bill",
               headerBackTitle: " ",
-              headerRight: () => <Button title="Save" />,
             }}
           />
           <Stack.Screen
@@ -130,7 +129,6 @@ export default function AuthNavigation({ navigator }) {
               headerShown: true,
               headerTitle: "Edit Food",
               headerBackTitle: " ",
-              headerRight: () => <Button title="Save" />,
             }}
           />
           <Stack.Screen

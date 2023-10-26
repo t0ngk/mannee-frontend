@@ -57,25 +57,7 @@ export default function Member({ data, stage, type, memberType, showheader, disa
           </TouchableOpacity>
         </View>
       )}
-      {stage === "foodEdit" && (
-        <View className="  w-full mt-3">
-          <TouchableOpacity
-            className="flex bottom-0 flex-row w-full  bg-[#BB2727] h-[40px]   rounded-xl "
-            onPress={() => alert("delete bill")}
-          >
-            <View className="p-2 justify-center">
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                color="white"
-                size={20}
-              ></FontAwesomeIcon>
-            </View>
-            <Text className="text-center mx-[100px] mt-1 p-2 text-white font-semibold">
-              Delete Food
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+    
     </View>
   );
 }

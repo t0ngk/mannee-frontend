@@ -7,10 +7,12 @@ import {
   FlatList,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import { useColor } from "../stores/colorContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 const Data = [
@@ -27,8 +29,42 @@ const Data = [
 ];
 
 export default function BillAdd({ navigation, route }) {
+  const { id } = route.params;
   const { color, updateColor } = useColor();
   const [name, setName] = useState("");
+
+  navigation.setOptions({
+    headerRight: () => (
+      <TouchableOpacity className="mx-5" onPress={() => editBill()}>
+        <Text className="text-xl font-semibold">Edit</Text>
+      </TouchableOpacity>
+    ),
+  });
+
+
+  const editBill = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(`http://172.20.10.2:3000/bill/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body:JSON.stringify({
+        name: name,
+        color: color
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      console.log(data);
+      Alert.alert("Edit Bill Success");
+      navigation.goBack();
+    } else {
+      const err = await res.json();
+      console.log(err);
+    }
+  }
 
   return (
     <>
@@ -48,7 +84,7 @@ export default function BillAdd({ navigation, route }) {
               <Text className="font-semibold">Color</Text>
             </View>
             <View className="flex flex-row items-center">
-            <View
+              <View
                 className="mx-2 w-6 h-6 rounded-full"
                 style={{ backgroundColor: color }}
               ></View>

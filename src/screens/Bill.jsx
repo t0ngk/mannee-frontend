@@ -42,7 +42,7 @@ export default function Bill({ route, navigation }) {
     if (res.ok) {
       const data = await res.json();
       setbills(data);
-      console.log(data);
+      'console.log(data);'
     } else {
       const err = await res.json();
       console.log(err);
