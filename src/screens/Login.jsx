@@ -12,10 +12,10 @@ export default function Login({ navigation }) {
     const data = {
       username: value.username,
       password: value.password,
-    };
-    console.log(data);
-    const api = await fetch("http://localhost:3000/auth/signin", {
-      method: "POST",
+    }
+    console.log(data)
+    const api = await fetch('http://localhost:3000/auth/signin', {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
@@ -25,9 +25,9 @@ export default function Login({ navigation }) {
     if (api.ok) {
       const res = await api.json();
       Alert.alert("Login Success");
-      SecureStore.setItemAsync("token", res.token);
-      const user = await fetch("http://localhost:3000/auth/me", {
-        method: "GET",
+      SecureStore.setItemAsync('token', res.token);
+      const user = await fetch('http://localhost:3000/auth/me', {
+        method: 'GET',
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${res.token}`,

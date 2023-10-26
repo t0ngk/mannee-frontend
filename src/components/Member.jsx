@@ -24,7 +24,7 @@ export default function Member({ data, stage, type, memberType, showheader, disa
             )}
           </View>
           <ScrollView className="w-full ">
-            {data.map((item) => (
+            {data?.map((item) => (
               <MemberStructure
                 memberType={memberType}
                 key={item.id}
@@ -38,25 +38,6 @@ export default function Member({ data, stage, type, memberType, showheader, disa
           </ScrollView>
         </View>
       </View>
-      {stage === "edit" && (
-        <View className=" w-full my-[60px] ">
-          <TouchableOpacity
-            className="flex flex-row w-full  bg-[#BB2727] h-[40px]   rounded-xl "
-            onPress={() => alert("delete bill")}
-          >
-            <View className="p-2 justify-center">
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                color="white"
-                size={20}
-              ></FontAwesomeIcon>
-            </View>
-            <Text className="text-center mx-[100px] mt-1 p-2 text-white font-semibold">
-              Delete Bill
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
     
     </View>
   );

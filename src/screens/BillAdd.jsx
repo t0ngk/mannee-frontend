@@ -13,16 +13,26 @@ import { useEffect, useState } from "react";
 import { useColor } from "../stores/colorContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as SecureStore from "expo-secure-store";
+import { useMember } from "../stores/memberContext";
+import { useUser } from "../stores/userContext";
 
 const Data = []
 export default function BillAdd({ navigation, route }) {
   const { color, setColor } = useColor();
   const [name, setName] = useState("");
+  const { members, setMember } = useMember();
+  const { user } = useUser();
 
+  const simplyfyMember = (member) => {
+    const newMember = member.map((item) => {
+      return item.id;
+    });
+    return newMember.filter((item) => item != user.id);
+  };
 
 const postbill = async () => {
   const token = await SecureStore.getItemAsync("token");
-  const res = await fetch(`http://localhost:3000/bill/new`, {
+  const res = await fetch(`http://172.20.10.2:3000/bill/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -31,6 +41,7 @@ const postbill = async () => {
     body: JSON.stringify({
       name: name,
       color: color,
+      members: simplyfyMember(members),
     }),
   });
   if (res.ok) {
@@ -85,7 +96,7 @@ const postbill = async () => {
         </View>
         <View className=" max-h-[250px] h-[250px] mt-4 ">
           <Member
-            data={Data}
+            data={members}
             stage="add"
             type="edit"
             memberType="delete"

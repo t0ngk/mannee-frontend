@@ -19,7 +19,7 @@ export default function AddMember({ navigation, route }) {
 
   const fetchFriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://localhost:3000/friend`, {
+    const res = await fetch(`http://172.20.10.2:3000/friend`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
