@@ -1,6 +1,7 @@
 import { Text, View, Image, ScrollView } from "react-native";
 import Member from "../components/Member";
 import dayjs from "dayjs";
+import { useUser } from "../stores/userContext";
 const Data = [
   {
     id: 1,
@@ -24,32 +25,27 @@ const Data = [
   },
 ];
 export default function DetailSubscription({ navigation, route }) {
+  const { user } = useUser();
+  const { member } = route.params;
 
-  const calculateTotalDatetime = (startDate) => {
-    const today = dayjs();
-    const start = dayjs(Date(startDate));
-    const diff = today.diff(start, "day");
-    console.log(diff);
-    return diff;
-  };
-
+  console.log("member is ", member);
 
   function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
     const registration = dayjs(registrationDate);
     const today = dayjs();
-    const nextDueDate = registration.add(paymentIntervalMonths, 'month');
+    const nextDueDate = registration.add(paymentIntervalMonths, "month");
     if (nextDueDate.isAfter(today)) {
       return nextDueDate;
     } else {
       while (nextDueDate.isBefore(today)) {
-        nextDueDate.add(paymentIntervalMonths, 'month');
+        nextDueDate.add(paymentIntervalMonths, "month");
       }
       return nextDueDate;
     }
   }
 
   console.log(route.params);
-  const { price, img, firstbill, cycleFreq , daytopay } = route.params;
+  const { price, img, firstbill, cycleFreq, ownerId } = route.params;
   const nextbill = calculateMembershipDueDate(firstbill, cycleFreq);
   const diff = dayjs(nextbill).diff(dayjs(), "day");
   return (
@@ -61,7 +57,9 @@ export default function DetailSubscription({ navigation, route }) {
         </View>
         <View className="flex flex-row items-center justify-between mx-8">
           <Text className="text-xl font-light">First Bill</Text>
-          <Text className="text-xl font-light">{dayjs(firstbill).format('DD/MM/YYYY')}</Text>
+          <Text className="text-xl font-light">
+            {dayjs(firstbill).format("DD/MM/YYYY")}
+          </Text>
         </View>
         <View className="flex flex-col items-center my-6 pt-7 gap-2">
           <Text className="text-4xl">Next bill in</Text>
@@ -69,7 +67,12 @@ export default function DetailSubscription({ navigation, route }) {
           <Text className="text-4xl">Days</Text>
         </View>
         <View className=" max-h-[300px] h-[290px]  mx-[20px]">
-          <Member data={Data} showheader={'show'} memberType={'kill'}></Member>
+          <Member
+            data={member}
+            showheader={"show"}
+            memberType={"unkill"}
+            disable={user.id === ownerId ? false : true}
+          ></Member>
         </View>
       </ScrollView>
     </View>

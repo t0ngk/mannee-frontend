@@ -21,6 +21,7 @@ import ImagePickerExample from "../components/ImgPicker";
 import Profile from "../screens/Profile";
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useState } from "react";
+import { useUser } from "../stores/userContext";
 const Stack = createStackNavigator();
 
 export default function AuthNavigation({ navigator }) {

@@ -14,7 +14,7 @@ export default function AddFriends({ }) {
 
   const getnamefriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/friend/search/${text}`, {
+    const res = await fetch(`http://localhost:3000/friend/search/${text}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

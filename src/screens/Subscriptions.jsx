@@ -17,6 +17,7 @@ export default function Subscriptions({ navigation }) {
   const isFocused = useIsFocused();
   const { color, updateColor } = useColor();
   const { subscription, fetchSubscription } = useSubscription();
+  console.log(subscription)
   const [data, setData] = useState([]);
   useEffect(() => {
     if (isFocused) {
@@ -27,20 +28,6 @@ export default function Subscriptions({ navigation }) {
   const costperWeek = () => {
     const sum = subscription?.reduce((total, item) => total + item.price, 0);
     return sum?.toString();
-  };
-
-  const calculateTotalDatetime = (startDate) => {
-    const startdateformat = dayjs().format("YYYY-MM-DD");
-    const endDate = dayjs(startDate).add(1, "M").format("YYYY-MM-DD");
-    // console.log(startdateformat, endDate);
-    const newStartDate = new Date(startdateformat);
-    const startTimestamp = newStartDate.getTime();
-    const newEndDate = new Date(endDate);
-    const endTimestamp = newEndDate.getTime();
-    const diffTime = endTimestamp - startTimestamp;
-    const diffDay = diffTime / (1000 * 3600 * 24);
-    setPayday(Math.ceil(diffDay));
-    return Math.ceil(diffDay);
   };
 
   function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
@@ -62,9 +49,6 @@ export default function Subscriptions({ navigation }) {
     const dueDate = dayjs(date);
     return dueDate.diff(today, 'day');
   }
-
-  const [payday, setPayday] = useState(0);
-
 
   navigation.setOptions({
     headerLeft: () => {
@@ -101,9 +85,9 @@ export default function Subscriptions({ navigation }) {
                 cycleFreq: item.cycleFreq,
                 firstbill: item.firstBill,
                 ownerId: item.ownerId,
-                daytopay: payday,
+                member: item.user,
+                paidId: item.paidId,
               });
-              calculateTotalDatetime(item.firstbill);
             }}
           >
             <Boxsubscription

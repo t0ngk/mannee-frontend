@@ -6,11 +6,13 @@ import ColorPicker from "react-native-wheel-color-picker";
 import Subscriptions from "../screens/Subscriptions";
 import DetailSubscription from "../screens/DetailSubscription";
 import BillSummary from "../screens/BillSummary";
+import { useUser } from "../stores/userContext";
 
 
 const Stack = createStackNavigator();
 
 export default function CreatingSubNavigate() {
+  const {user} = useUser();
   return (
     <Stack.Navigator initialRouteName="AllSubsciptions">
       <Stack.Screen
@@ -45,6 +47,9 @@ export default function CreatingSubNavigate() {
             },
             headerBackTitleVisible: false,
             headerRight: () => {
+              if (user.id != route.params.ownerId) {
+                return null;
+              }
               return (
                 <TouchableOpacity
                   onPress={() => {

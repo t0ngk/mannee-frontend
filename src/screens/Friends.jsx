@@ -50,7 +50,7 @@ export default function Friends({ navigation }) {
 
   const getfriendRequst = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/friend/request`, {
+    const res = await fetch(`http://localhost:3000/friend/request`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ export default function Friends({ navigation }) {
 
   const getFriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch("http://172.20.10.2:3000/friend", {
+    const res = await fetch("http://localhost:3000/friend", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

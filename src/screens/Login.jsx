@@ -3,9 +3,11 @@ import Input from "../components/Input";
 import { Formik } from "formik";
 import * as SecureStore from 'expo-secure-store';
 import * as Yup from "yup";
+import { useUser } from "../stores/userContext";
 
 
 export default function Login({ navigation }) {
+  const { updateUser } = useUser();
 
   const login = async (value) => {
     const data = {
@@ -13,7 +15,7 @@ export default function Login({ navigation }) {
       password: value.password,
     }
     console.log(data)
-    const api = await fetch('http://172.20.10.2:3000/auth/signin', {
+    const api = await fetch('http://localhost:3000/auth/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -25,6 +27,21 @@ export default function Login({ navigation }) {
       const res = await api.json();
       Alert.alert("Login Success");
       SecureStore.setItemAsync('token', res.token);
+      const user = await fetch('http://localhost:3000/auth/me', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${res.token}`,
+        },
+      });
+      if (user.ok) {
+        const data = await user.json();
+        updateUser(data);
+      } else {
+        const err = await user.json();
+        Alert.alert("Error : " + err.error);
+        console.log(err)
+      }
       navigation.navigate("MainNavigation")
       console.log(res)
     } else {

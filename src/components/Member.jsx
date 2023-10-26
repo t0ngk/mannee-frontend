@@ -4,7 +4,7 @@ import { View, Text, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import MemberStructure from "./MemberStructure";
-export default function Member({ data, stage, type, memberType, showheader }) {
+export default function Member({ data, stage, type, memberType, showheader, disable }) {
   const navigation = useNavigation();
   return (
     <View className="h-full">
@@ -31,6 +31,7 @@ export default function Member({ data, stage, type, memberType, showheader }) {
                 id={item.id}
                 img={item.img}
                 name={item.username}
+                disable={disable}
               ></MemberStructure>
             ))}
           </ScrollView>
