@@ -35,7 +35,7 @@ export default function AddMember({ navigation, route }) {
   }
 
   const isMember = (id) => {
-    return member.some((item) => item.id === id);
+    return member?.some((item) => item.id === id);
   }
   
   console.log(isMember());

@@ -4,11 +4,57 @@ import dayjs from "dayjs";
 import { useUser } from "../stores/userContext";
 import MemberStructure from "../components/MemberStructure";
 import { useMember } from "../stores/memberContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 export default function DetailSubscription({ navigation, route }) {
   const { user } = useUser();
   const { member, id, paidId } = route.params;
   const { updateMember } = useMember();
+  const [paidMember, setPaidMember] = useState(paidId);
+  // console.log("LLL",paid)
+
+  // useEffect(() => {
+  //   if (paid.length === member.length) {
+  //     setPaidMember([]);
+  //   }
+  // }, [paid])
+
+  // useEffect(() => {
+  //   console.log(paidMember)
+  // }, [paidMember])
+
+  console.log(paidId);
+  console.log("++++++++++++++++++++++++++");
+  console.log(paidId);
+
+  const paidCheck = async () => {
+    const token = await SecureStore.getItemAsync("token");
+    const res = await fetch(
+      `http://localhost:3000/subscription/${id}/uncheckAll`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (res.ok) {
+      console.log("OK");
+    } else {
+      console.log("ERROR");
+    }
+  };
+
+  useEffect(() => {
+    if (paidMember.length === member.length) {
+      paidCheck();
+      setPaidMember([]);
+    }
+  }, [paidMember]);
+
+  // useEffect(() => {
+  //   console.log("Double Reactive", paidMember.length, member.length)
+  // }, [paidMember, paid])
 
   function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
     const registration = dayjs(registrationDate);
@@ -52,7 +98,16 @@ export default function DetailSubscription({ navigation, route }) {
               id={item.id}
               name={item.username}
               target={id}
-              memberType={paidId.includes(item.id) ? "unkill" : "kill"}
+              memberType={paidMember.includes(item.id) ? "unkill" : "kill"}
+              changeMemberType={(id) => {
+                if (paidMember.includes(id)) {
+                  setPaidMember(paidMember.filter((item) => item !== id));
+                  console.log("Remove");
+                } else {
+                  setPaidMember([...paidMember, id]);
+                  console.log("Add");
+                }
+              }}
             />
           ))}
         </View>

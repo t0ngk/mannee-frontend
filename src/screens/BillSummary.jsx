@@ -11,12 +11,12 @@ import { useUser } from "../stores/userContext";
 import MemberStructure from "../components/MemberStructure";
 
 export default function BillSummary({ route, navigation }) {
-  console.log("data is ", route.params.data);
   const { data } = route.params;
   const [bill, setBill] = useState(data);
   const isFocused = useIsFocused();
   const { members, updateMember } = useMember();
   const { user } = useUser();
+  const [name, setName] = useState("");
 
   const billbyid = async () => {
     const token = await SecureStore.getItemAsync("token");
@@ -30,8 +30,6 @@ export default function BillSummary({ route, navigation }) {
     if (res.ok) {
       const data = await res.json();
       setBill(data);
-      console.log("=============================")
-      console.log(data);
     } else {
       const err = await res.json();
       console.log(err);
@@ -152,6 +150,12 @@ export default function BillSummary({ route, navigation }) {
               key={item.id}
               id={item.id}
               name={item.username}
+              subhead={`฿ ${bill.items.reduce((a, b) => {
+                if (b.peopleId.includes(item.id)) {
+                  return a + b.price / b.peopleId.length;
+                }
+                return a;
+              }, 0)}`}
               target={data.id}
               memberType={bill?.paidedId?.includes(item.id) ? "paid" : "unpaid"}
             />

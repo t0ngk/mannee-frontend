@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { View, Image, Text } from "react-native";
 
 export default function DataBox({ id, name, price, amount_of_member, page }) {
+  const [nname, setnname] = useState(name);
   return (
     <View
       className={`flex flex-row justify-between ${
@@ -8,7 +10,7 @@ export default function DataBox({ id, name, price, amount_of_member, page }) {
       }  rounded-md border-[#CFCFCF]`}
     >
       <View className="pt-2">
-        <Text className="font-medium">{name}</Text>
+        <Text className="font-medium">{nname}</Text>
       </View>
       <View className=" items-end">
         <Text>฿{price ? price : 0}</Text>

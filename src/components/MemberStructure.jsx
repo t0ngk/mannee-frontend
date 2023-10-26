@@ -19,10 +19,11 @@ export default function MemberStructure({
   disable,
   action,
   value,
+  subhead,
+  changeMemberType
 }) {
   const [checked, setChecked] = useState(value || false);
   const [paid, setPaid] = useState(false);
-  const [mode, setMode] = useState(memberType);
   const { members, updateMember } = useMember();
 
   const togglepaid = () => setPaid(!paid);
@@ -82,79 +83,86 @@ export default function MemberStructure({
   };
   return (
     <View>
-      {(mode !== "kill" && mode !== "unkill" && mode !== "paid" && mode !== "unpaid") && (
-        <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
-          <View className="flex flex-row items-center">
-            {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
-            <Image
-              source={{
-                uri: `https://github.com/identicons/${name}.png`,
-              }}
-              style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
-            />
-            <Text className="p-3">{name}</Text>
-          </View>
-          {mode === "add" && (
-            <View className="border rounded-md border-[#CFCFCF]">
-              <Checkbox
-                color="#808080"
-                status={checked ? "checked" : "unchecked"}
-                onPress={() => {
-                  if (checked) {
-                    updateMember(members.filter((item) => item.id !== id));
-                    setChecked(false);
-                  } else {
-                    updateMember([...members, { id, username: name }]);
-                    setChecked(true);
-                  }
+      {memberType !== "kill" &&
+        memberType !== "unkill" &&
+        memberType !== "paid" &&
+        memberType !== "unpaid" && (
+          <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
+            <View className="flex flex-row items-center">
+              {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
+              <Image
+                source={{
+                  uri: `https://github.com/identicons/${name}.png`,
                 }}
+                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
               />
+              <Text className="p-3">{name}</Text>
             </View>
-          )}
-          {mode === "delete" && (
-            <TouchableOpacity
-              className="flex flex-row m-2"
-              onPress={() => alert(`delete member ${id} `)}
-              disabled={disable}
-            >
-              <FontAwesomeIcon
-                icon={faTrashAlt}
-                color="red"
-                size={20}
-              ></FontAwesomeIcon>
-            </TouchableOpacity>
-          )}
-          {mode === "addfirend" && (
-            <TouchableOpacity
-              className="flex flex-row m-2"
-              onPress={() => sendrequestfriend()}
-              disabled={disable}
-            >
-              <Ionicons name="ios-person-add-outline" size={24} color="black" />
-            </TouchableOpacity>
-          )}
-          {mode === "acceptfriend" && (
-            <View className="flex-row items-center">
+            {memberType === "add" && (
+              <View className="border rounded-md border-[#CFCFCF]">
+                <Checkbox
+                  color="#808080"
+                  status={checked ? "checked" : "unchecked"}
+                  onPress={() => {
+                    if (checked) {
+                      updateMember(members.filter((item) => item.id !== id));
+                      setChecked(false);
+                    } else {
+                      updateMember([...members, { id, username: name }]);
+                      setChecked(true);
+                    }
+                  }}
+                />
+              </View>
+            )}
+            {memberType === "delete" && (
               <TouchableOpacity
                 className="flex flex-row m-2"
-                onPress={() => acceptfriend()}
+                onPress={() => alert(`delete member ${id} `)}
                 disabled={disable}
               >
-                <AntDesign name="check" size={24} color="green" />
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  color="red"
+                  size={20}
+                ></FontAwesomeIcon>
               </TouchableOpacity>
+            )}
+            {memberType === "addfirend" && (
               <TouchableOpacity
                 className="flex flex-row m-2"
-                onPress={() => deletefriend()}
+                onPress={() => sendrequestfriend()}
                 disabled={disable}
               >
-                <AntDesign name="close" size={24} color="red" />
+                <Ionicons
+                  name="ios-person-add-outline"
+                  size={24}
+                  color="black"
+                />
               </TouchableOpacity>
-            </View>
-          )}
-          {mode === "none" && <></>}
-        </View>
-      )}
-      {mode === "kill" && (
+            )}
+            {memberType === "acceptfriend" && (
+              <View className="flex-row items-center">
+                <TouchableOpacity
+                  className="flex flex-row m-2"
+                  onPress={() => acceptfriend()}
+                  disabled={disable}
+                >
+                  <AntDesign name="check" size={24} color="green" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="flex flex-row m-2"
+                  onPress={() => deletefriend()}
+                  disabled={disable}
+                >
+                  <AntDesign name="close" size={24} color="red" />
+                </TouchableOpacity>
+              </View>
+            )}
+            {memberType === "none" && <></>}
+          </View>
+        )}
+      {memberType === "kill" && (
         <TouchableOpacity
           disabled={disable}
           onPress={async () => {
@@ -169,7 +177,9 @@ export default function MemberStructure({
               }
             );
             if (res.ok) {
-              setMode("unkill");
+              // setMode("unkill");
+              changeMemberType(id)
+              {action && action(id)}
             }
           }}
         >
@@ -189,7 +199,7 @@ export default function MemberStructure({
           </View>
         </TouchableOpacity>
       )}
-      {mode === "unkill" && (
+      {memberType === "unkill" && (
         <TouchableOpacity
           disabled={disable}
           onPress={async () => {
@@ -204,7 +214,9 @@ export default function MemberStructure({
               }
             );
             if (res.ok) {
-              setMode("kill");
+              // setMode("kill");
+              changeMemberType(id)
+              {action && action(id)}
             }
           }}
         >
@@ -224,7 +236,7 @@ export default function MemberStructure({
           </View>
         </TouchableOpacity>
       )}
-      {mode === "paid" && (
+      {memberType === "paid" && (
         <TouchableOpacity
           disabled={disable}
           onPress={async () => {
@@ -239,7 +251,7 @@ export default function MemberStructure({
               }
             );
             if (res.ok) {
-              setMode("unpaid");
+              // setMode("unpaid");
             } else {
               const err = await res.json();
               console.log(err);
@@ -247,14 +259,17 @@ export default function MemberStructure({
           }}
         >
           <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
-            <View className="flex flex-row items-center">
+            <View className="flex flex-row items-center gap-3">
               <Image
                 source={{
                   uri: `https://github.com/identicons/${name}.png`,
                 }}
                 style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
               />
-              <Text className="p-3">{name}</Text>
+              <View>
+                <Text>{name}</Text>
+                {subhead && <Text>{subhead}</Text>}
+              </View>
             </View>
             <View className="justify-center">
               <MaterialIcons name="attach-money" size={24} color="green" />
@@ -262,7 +277,7 @@ export default function MemberStructure({
           </View>
         </TouchableOpacity>
       )}
-      {mode === "unpaid" && (
+      {memberType === "unpaid" && (
         <TouchableOpacity
           disabled={disable}
           onPress={async () => {
@@ -277,7 +292,7 @@ export default function MemberStructure({
               }
             );
             if (res.ok) {
-              setMode("paid");
+              // setMode("paid");
             } else {
               const err = await res.json();
               console.log(err);
@@ -285,14 +300,17 @@ export default function MemberStructure({
           }}
         >
           <View className="h- full flex flex-row w-full justify-between  my-2  border p-[10px] rounded-md border-[#CFCFCF]">
-            <View className="flex flex-row items-center">
+            <View className="flex flex-row items-center gap-3">
               <Image
                 source={{
                   uri: `https://github.com/identicons/${name}.png`,
                 }}
                 style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
               />
-              <Text className="p-3">{name}</Text>
+              <View className="flex flex-col">
+                <Text>{name}</Text>
+                {subhead && <Text>{subhead}</Text>}
+              </View>
             </View>
             <View className="justify-center">
               <MaterialIcons name="attach-money" size={24} color="red" />

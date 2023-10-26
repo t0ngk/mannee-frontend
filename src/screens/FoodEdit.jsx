@@ -44,7 +44,7 @@ export default function FoodEdit({ route, navigation }) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: name,
+          name: newNeame,
           price: parseInt(newPrice),
           color: "#ffff",
           peopleId: simplyfyMember(members),
