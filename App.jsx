@@ -6,11 +6,13 @@ import { ColorContextProvider } from "./src/stores/colorContext";
 import { IconContextProvider } from "./src/stores/iconContext";
 import { SubscriptionContextProvider } from "./src/stores/subscriptionContext";
 import { UserContextProvider } from "./src/stores/userContext";
+import { MemberContextProvider } from "./src/stores/memberContext";
 // import { Provider } from 'react-redux';
 
 export default function App() {
   return (
     <UserContextProvider>
+      <MemberContextProvider>
       <SubscriptionContextProvider>
         <IconContextProvider>
           <ColorContextProvider>
@@ -18,6 +20,7 @@ export default function App() {
           </ColorContextProvider>
         </IconContextProvider>
       </SubscriptionContextProvider>
+      </MemberContextProvider>
     </UserContextProvider>
   );
 }
