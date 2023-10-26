@@ -82,8 +82,8 @@ export default function Login({ navigation }) {
         <View className="flex flex-col items-center justify-center content-center my-auto py-52">
           <View className="mb-5">
             <Image
-              className="h-20 w-20"
-              source={{ uri: "https://cdn.logo.com/hotlink-ok/logo-social.png" }}
+              className="h-40 w-40"
+              source={{ uri: "https://i.imgur.com/sijQJ3j.png" }}
             />
           </View>
           <View className="flex flex-col w-80">
