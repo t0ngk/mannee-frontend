@@ -92,14 +92,6 @@ export default function AuthNavigation({ navigator }) {
               headerShown: true,
               headerTitle: "New Bill",
               headerBackTitle: " ",
-              headerRight: () => (
-                <Button
-                  title="Add"
-                  onPress={() => {
-                    alert("add new Bill");
-                  }}
-                />
-              ),
             }}
           />
           <Stack.Screen
@@ -129,7 +121,6 @@ export default function AuthNavigation({ navigator }) {
               headerShown: true,
               headerTitle: "New Food",
               headerBackTitle: " ",
-              headerRight: () => <Button title="Add" />,
             }}
           />
           <Stack.Screen

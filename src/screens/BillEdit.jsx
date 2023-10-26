@@ -9,6 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import { useColor } from "../stores/colorContext";
+
 
 const Data = [
   {
@@ -24,13 +27,8 @@ const Data = [
 ];
 
 export default function BillAdd({ navigation, route }) {
-  const [color, setColor] = useState(false);
-  useEffect(() => {
-    const routeColor = route.params ? route.params.color : "";
-    if (routeColor) {
-      setColor(routeColor);
-    }
-  }, [route.params]);
+  const { color, updateColor } = useColor();
+  const [name, setName] = useState("");
 
   return (
     <>
@@ -41,18 +39,19 @@ export default function BillAdd({ navigation, route }) {
             <TextInput
               placeholder="Enter Name"
               className="p-2 rounded-lg w-28 h-8 ml-2"
+              onChangeText={(e) => setName(e)}
+              value={name}
             />
           </View>
           <View className="border-t-[0.25px] flex flex-row justify-between items-center py-1">
             <View className="flex flex-row items-center">
               <Text className="font-semibold">Color</Text>
-              <View
+            </View>
+            <View className="flex flex-row items-center">
+            <View
                 className="mx-2 w-6 h-6 rounded-full"
                 style={{ backgroundColor: color }}
               ></View>
-            </View>
-            <View className="flex flex-row items-center">
-              <Text>{color ? color : "Pick Color"}</Text>
               <Button
                 title=">"
                 onPress={() =>
