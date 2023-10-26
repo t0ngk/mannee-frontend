@@ -3,33 +3,13 @@ import { TextInput, View, Text, Alert } from "react-native";
 import Member from "../components/Member";
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useMember } from "../stores/memberContext";
 
-const Data = [
-  {
-    id: 1,
-    name: "User1",
-    img: "https://minio.haxter.ee/ctx-betterexperience-prd/uploads/images/221ddf5a-642b-4ace-b145-f9426ab2ad03_original.jpg",
-  },
-  {
-    id: 2,
-    name: "User2",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 3,
-    name: "User3",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-  {
-    id: 4,
-    name: "User4",
-    img: "https://play-lh.googleusercontent.com/cShys-AmJ93dB0SV8kE6Fl5eSaf4-qMMZdwEDKI5VEmKAXfzOqbiaeAsqqrEBCTdIEs",
-  },
-];
 export default function FoodAdd({route, navigation}) {
   console.log("data is ", route.params);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const { members, updateMember } = useMember();
 
   navigation.setOptions({
     headerRight: () => (
@@ -87,7 +67,7 @@ export default function FoodAdd({route, navigation}) {
         />
       </View>
       <View className=" max-h-[250px] h-[250px] mt-4 ">
-        <Member data={Data} stage="add" type="edit" memberType="add"></Member>
+        <Member data={members} type="edit" ></Member>
       </View>
     </View>
   );

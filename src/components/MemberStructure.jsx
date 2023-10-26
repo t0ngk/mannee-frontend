@@ -47,7 +47,7 @@ export default function MemberStructure({
 
   const acceptfriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://localhost:3000/friend/accept/TESTT`, {
+    const res = await fetch(`http://localhost:3000/friend/accept/${name}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export default function MemberStructure({
 
   const deletefriend = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://localhost:3000/friend/reject/TESTT`, {
+    const res = await fetch(`http://localhost:3000/friend/reject/${name}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
