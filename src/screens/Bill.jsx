@@ -32,7 +32,7 @@ export default function Bill({ route, navigation }) {
 
   const getBill = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill`, {
+    const res = await fetch(`http://localhost:3000/bill`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -22,7 +22,7 @@ export default function BillAdd({ navigation, route }) {
 
 const postbill = async () => {
   const token = await SecureStore.getItemAsync("token");
-  const res = await fetch(`http://172.20.10.2:3000/bill/new`, {
+  const res = await fetch(`http://localhost:3000/bill/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -7,6 +7,8 @@ import { Checkbox } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as SecureStore from "expo-secure-store";
+import { useMember } from "../stores/memberContext";
+import { set } from "date-fns";
 
 export default function MemberStructure({
   id,
@@ -15,11 +17,13 @@ export default function MemberStructure({
   memberType,
   target,
   disable,
-  action
+  action,
+  value,
 }) {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(value || false);
   const [paid, setPaid] = useState(false);
   const [mode, setMode] = useState(memberType);
+  const { members, updateMember } = useMember();
 
   const togglepaid = () => setPaid(!paid);
 
@@ -83,11 +87,11 @@ export default function MemberStructure({
           <View className="flex flex-row items-center">
             {/* <Ionicons name="md-person-circle-outline" size={40} color="black" /> */}
             <Image
-                source={{
-                  uri: `https://github.com/identicons/${name}.png`,
-                }}
-                style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
-              />
+              source={{
+                uri: `https://github.com/identicons/${name}.png`,
+              }}
+              style={{ width: 40, height: 40, borderRadius: 40 / 2 }}
+            />
             <Text className="p-3">{name}</Text>
           </View>
           {mode === "add" && (
@@ -96,8 +100,13 @@ export default function MemberStructure({
                 color="#808080"
                 status={checked ? "checked" : "unchecked"}
                 onPress={() => {
-                  setChecked(!checked);
-                  console.log(checked);
+                  if (checked) {
+                    updateMember(members.filter((item) => item.id !== id));
+                    setChecked(false);
+                  } else {
+                    updateMember([...members, { id, username: name }]);
+                    setChecked(true);
+                  }
                 }}
               />
             </View>

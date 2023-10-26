@@ -34,6 +34,12 @@ export default function AddMember({ navigation, route }) {
     }
   }
 
+  const isMember = (id) => {
+    return member.some((item) => item.id === id);
+  }
+  
+  console.log(isMember());
+
   useEffect(() => {
     if (isFocused) {
       console.log("Ready to fetch")
@@ -50,6 +56,7 @@ export default function AddMember({ navigation, route }) {
             key={item.id}
             id={item.id}
             name={item.username}
+            value={isMember(item.id)}
           ></MemberStructure>
         ))}
       </ScrollView>

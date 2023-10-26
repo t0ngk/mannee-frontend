@@ -3,14 +3,14 @@ import { createContext, useContext, useState } from "react";
 const context = createContext();
 
 export function MemberContextProvider({ children }) {
-  const [member, setMember] = useState(null);
-  const updateMember = (member) => {
+  const [members, setMembers] = useState([]);
+  const updateMember = (members) => {
     console.log("================Member-API================");
-    console.log(member);
-    setMember(member);
+    console.log(members);
+    setMembers(members);
   };
   return (
-    <context.Provider value={{ member, updateMember }}>{children}</context.Provider>
+    <context.Provider value={{ members, updateMember }}>{children}</context.Provider>
   );
 }
 

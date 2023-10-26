@@ -17,6 +17,8 @@ import { useColor } from "../stores/colorContext";
 import { useIcon } from "../stores/iconContext";
 import dayjs from "dayjs";
 import * as SecureStore from "expo-secure-store";
+import { useMember } from "../stores/memberContext";
+import { useUser } from "../stores/userContext";
 
 const Data = [
   {
@@ -65,8 +67,17 @@ export default function EditSubscription({ navigation, route }) {
   const [newcolor, setNewcolor] = useState(color || "");
   const { icon, updateIcon } = useIcon();
   const { color, updateColor } = useColor();
+  const { members, updateMember } = useMember();
+  const { user } = useUser();
 
   console.log("newcycle is ", newcycleFeqy);
+
+  const simplyfyMember = (member) => {
+    const newMember = member.map((item) => {
+      return item.id;
+    });
+    return newMember.filter((item) => item != user.id);
+  };
 
   const editSubscription = async () => {
     console.log(firstbill);
@@ -80,9 +91,13 @@ export default function EditSubscription({ navigation, route }) {
       firstBill: newdate,
       cycle: "MONTHLY",
       cycleFreq: parseInt(newcycleFeqy),
-      member: [],
+      member: simplyfyMember(members),
     };
+    console.log("===========================");
     console.log(Data);
+    console.log("===========================");
+    console.log(simplyfyMember(members));
+    console.log("===========================");
     const response = await fetch(`http://localhost:3000/subscription/${id}`, {
       method: "PUT",
       headers: {
@@ -94,12 +109,16 @@ export default function EditSubscription({ navigation, route }) {
     if (response.ok) {
       console.log("Pasing json");
       const data = await response.json();
+      console.log("===========================");
       console.log(data);
+      console.log("===========================");
       Alert.alert("Create Subscription Success");
       navigation.navigate("DetailSub", {
         ...data,
         img: data.icon,
         firstbill: data.firstBill,
+        member: data.user,
+        paidId: data.paidedId,
         daytopay: 0,
       });
     } else {
@@ -208,7 +227,7 @@ export default function EditSubscription({ navigation, route }) {
           />
         </View>
         <View className="mx-[20px] h-[50%]">
-          <Member showheader={"show"} data={member} type="edit"></Member>
+          <Member showheader={"show"} data={members} type="edit"></Member>
         </View>
         <TouchableOpacity
           className="items-center my-4"

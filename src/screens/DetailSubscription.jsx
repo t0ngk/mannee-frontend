@@ -3,12 +3,12 @@ import Member from "../components/Member";
 import dayjs from "dayjs";
 import { useUser } from "../stores/userContext";
 import MemberStructure from "../components/MemberStructure";
+import { useMember } from "../stores/memberContext";
+import { useEffect } from "react";
 export default function DetailSubscription({ navigation, route }) {
   const { user } = useUser();
   const { member, id, paidId } = route.params;
-
-  console.log("member is ", member);
-  console.log("paidId is", paidId);
+  const { updateMember } = useMember();
 
   function calculateMembershipDueDate(registrationDate, paymentIntervalMonths) {
     const registration = dayjs(registrationDate);

@@ -69,7 +69,7 @@ export default function BillSummary({ route, navigation }) {
 
   const billbyid = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill/${data['id']}`, {
+    const res = await fetch(`http://localhost:3000/bill/${data['id']}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

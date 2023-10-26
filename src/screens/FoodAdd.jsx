@@ -41,7 +41,7 @@ export default function FoodAdd({route, navigation}) {
 
   const postItembyId = async () => {
     const token = await SecureStore.getItemAsync("token");
-    const res = await fetch(`http://172.20.10.2:3000/bill/${route.params.id}/item/new`, {
+    const res = await fetch(`http://localhost:3000/bill/${route.params.id}/item/new`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

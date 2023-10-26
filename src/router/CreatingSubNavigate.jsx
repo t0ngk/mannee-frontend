@@ -7,12 +7,14 @@ import Subscriptions from "../screens/Subscriptions";
 import DetailSubscription from "../screens/DetailSubscription";
 import BillSummary from "../screens/BillSummary";
 import { useUser } from "../stores/userContext";
+import { useMember } from "../stores/memberContext";
 
 
 const Stack = createStackNavigator();
 
 export default function CreatingSubNavigate() {
   const {user} = useUser();
+  const { members, updateMember } = useMember();
   return (
     <Stack.Navigator initialRouteName="AllSubsciptions">
       <Stack.Screen
@@ -53,6 +55,7 @@ export default function CreatingSubNavigate() {
               return (
                 <TouchableOpacity
                   onPress={() => {
+                    updateMember(route.params.member);
                     navigation.navigate("EditSubscription", {
                       id: route.params.id,
                       name: route.params.name,
